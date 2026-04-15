@@ -13,8 +13,11 @@
             --text-sub: #86868b;
             --border-color: rgba(0, 0, 0, 0.05);
             --accent-blue: #0071e3;
-            --hover-bg: #ebebed;
+            --hover-bg: #ffffff;
             --skeleton-bg: #e8e8ea;
+            /* 亮色模式下的细微阴影 */
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            --card-shadow-hover: 0 12px 24px rgba(0, 0, 0, 0.08);
         }
 
         [data-theme="dark"] {
@@ -25,6 +28,9 @@
             --border-color: rgba(255, 255, 255, 0.1);
             --hover-bg: #2c2c2e;
             --skeleton-bg: #2c2c2e;
+            /* 暗色模式下的深邃阴影 */
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --card-shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.7);
         }
 
         * {
@@ -32,9 +38,12 @@
             padding: 0;
             box-sizing: border-box;
             -webkit-font-smoothing: antialiased;
+            /* 优化过渡动画，加入 transform 和 shadow */
             transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
                         color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-                        border-color 0.5s ease;
+                        border-color 0.5s ease,
+                        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
@@ -66,7 +75,6 @@
 
         .theme-toggle:hover {
             transform: scale(1.05);
-            background-color: var(--hover-bg);
         }
 
         .container {
@@ -110,36 +118,44 @@
             line-height: 1.5;
         }
 
+        /* ── 核心修改：列表容器只负责间距 ── */
         .article-list {
             display: flex;
             flex-direction: column;
-            background-color: var(--secondary-bg);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
+            gap: 16px; /* 设置卡片之间的 20px 间距 */
+            background-color: transparent; /* 移除容器背景 */
+            border: none; /* 移除容器边框 */
         }
 
+        /* ── 核心修改：将样式应用到单个卡片 ── */
         .article-item {
             padding: 16px 20px;
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 16px;
+            background-color: var(--secondary-bg);
+            border-radius: 20px; /* 每篇文章都有圆角 */
+            border: 1px solid var(--border-color); /* 每篇文章都有边框 */
+            box-shadow: var(--card-shadow);
+            position: relative;
+        }
+
+        /* 移除原本的底边线 */
+        .article-item:last-child {
             border-bottom: 1px solid var(--border-color);
         }
 
-        .article-item:last-child {
-            border-bottom: none;
-        }
-
+        /* ── 悬停效果：向上浮起 ── */
         .article-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-shadow-hover);
             background-color: var(--hover-bg);
         }
 
-        /* 左侧缩略图 */
         .article-thumbnail {
             flex-shrink: 0;
-            width: 120px;
+            width: 100px;
             height: 72px;
             border-radius: 10px;
             overflow: hidden;
@@ -160,7 +176,6 @@
             opacity: 1;
         }
 
-        /* 加载中的骨架动画 */
         .article-thumbnail::before {
             content: '';
             position: absolute;
@@ -168,18 +183,16 @@
             background: linear-gradient(
                 90deg,
                 var(--skeleton-bg) 0%,
-                rgba(255,255,255,0.15) 50%,
+                rgba(255,255,255,0.1) 50%,
                 var(--skeleton-bg) 100%
             );
             background-size: 200% 100%;
             animation: shimmer 1.4s infinite;
-            border-radius: 10px;
             transition: opacity 0.3s ease;
         }
 
         .article-thumbnail.loaded::before {
             opacity: 0;
-            pointer-events: none;
         }
 
         @keyframes shimmer {
@@ -187,7 +200,6 @@
             100% { background-position:  200% 0; }
         }
 
-        /* 右侧文字区域 */
         .article-info {
             flex: 1;
             min-width: 0;
@@ -197,8 +209,8 @@
             display: block;
             color: var(--text-main);
             font-weight: 500;
-            font-size: 1.0rem;
-            margin-bottom: 6px;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -227,7 +239,6 @@
             text-align: center;
             font-size: 0.8rem;
             color: var(--text-sub);
-            letter-spacing: 0.02em;
         }
 
         @keyframes appleFade {
@@ -245,7 +256,7 @@
 </head>
 <body>
 
-    <button class="theme-toggle" id="theme-btn" title="切换模式">
+    <button class="theme-toggle" id="theme-btn">
         <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
     </button>
 
@@ -264,10 +275,18 @@
         <main class="article-list">
             <a href="https://shane2bytes.github.io/docshare/infinityDice_260415.html" class="article-item">
                 <div class="article-thumbnail">
-                    <img
-                        data-src="https://s6z1.com/shane/i/2026/04/15/17dfd.png"
-                        alt="infinity Dice 玩家广告压力缓解提案"
-                    />
+                    <img data-src="https://s6z1.com/shane/i/2026/04/15/17dfd.png" alt="infinity Dice"/>
+                </div>
+                <div class="article-info">
+                    <span class="title">infinity Dice 玩家广告压力缓解提案</span>
+                    <span class="date">2026.04.15 · 인피니티 다이스_광고 완화 제안</span>
+                </div>
+                <svg class="arrow" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"></path></svg>
+            </a>
+
+            <a href="https://shane2bytes.github.io/docshare/infinityDice_260415.html" class="article-item">
+                <div class="article-thumbnail">
+                    <img data-src="https://s6z1.com/shane/i/2026/04/15/17dfd.png" alt="infinity Dice"/>
                 </div>
                 <div class="article-info">
                     <span class="title">infinity Dice 玩家广告压力缓解提案</span>
@@ -283,14 +302,12 @@
     </footer>
 
     <script>
-        /* ── 主题切换 ── */
-        const themeBtn  = document.getElementById('theme-btn');
+        /* ── 主题切换逻辑 ── */
+        const themeBtn = document.getElementById('theme-btn');
         const themeIcon = document.getElementById('theme-icon');
-        const body      = document.body;
-
-        const sunIcon  = `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`;
+        const body = document.body;
+        const sunIcon = `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`;
         const moonIcon = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
-
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
         function setTheme(theme) {
@@ -303,39 +320,30 @@
         }
 
         systemPrefersDark.addEventListener('change', e => setTheme(e.matches ? 'dark' : 'light'));
-
         themeBtn.addEventListener('click', () => {
             const current = body.getAttribute('data-theme');
             setTheme(current === 'dark' ? 'light' : 'dark');
         });
-
         initTheme();
 
         /* ── 缩略图懒加载 ── */
-        document.querySelectorAll('.article-thumbnail img[data-src]').forEach(img => {
-            const wrapper = img.parentElement;
-
-            img.addEventListener('load', () => {
-                img.classList.add('loaded');
-                wrapper.classList.add('loaded');
+        const observerOptions = { root: null, threshold: 0.1 };
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    const wrapper = img.parentElement;
+                    img.src = img.dataset.src;
+                    img.onload = () => {
+                        img.classList.add('loaded');
+                        wrapper.classList.add('loaded');
+                    };
+                    observer.unobserve(img);
+                }
             });
+        }, observerOptions);
 
-            img.addEventListener('error', () => {
-                // 加载失败时显示占位图标
-                wrapper.classList.add('loaded');
-                wrapper.innerHTML = `
-                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-sub)" stroke-width="1.5" opacity="0.4">
-                            <rect x="3" y="3" width="18" height="18" rx="3"/>
-                            <circle cx="8.5" cy="8.5" r="1.5"/>
-                            <path d="M21 15l-5-5L5 21"/>
-                        </svg>
-                    </div>`;
-            });
-
-            // 触发加载
-            img.src = img.dataset.src;
-        });
+        document.querySelectorAll('.article-thumbnail img').forEach(img => imageObserver.observe(img));
     </script>
 </body>
 </html>
