@@ -3,141 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Archive | Index</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Shane | Index</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #191919;       /* Kakao 深色模式背景 */
-            --card-bg: #252525;        /* 卡片背景 */
-            --text-main: #FFFFFF;      /* 主文字颜色 */
-            --text-sub: #8E8E8E;       /* 副文字颜色 */
-            --accent-color: #FEE500;   /* Kakao 经典黄 */
-            --hover-bg: #2F2F2F;       /* 悬停背景 */
+            --bg-color: #000000;          /* Apple 纯黑背景 */
+            --secondary-bg: #1c1c1e;     /* iOS 系统层级背景色 */
+            --text-main: #f5f5f7;        /* Apple 常用近白色 */
+            --text-sub: #86868b;         /* Apple 常用副文本灰色 */
+            --accent-blue: #0071e3;      /* Apple 经典蓝 */
+            --card-hover: #2c2c2e;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-font-smoothing: antialiased; /* 字体抗锯齿，更有果味 */
         }
 
-        /* 1. 关键修改：让 body 成为 flex 容器并占满全屏高度 */
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            line-height: 1.6;
+            font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* 保证至少占满一屏高度 */
+            min-height: 100vh;
         }
 
-        /* 2. 关键修改：让容器自动撑开，占据除 footer 以外的所有空间 */
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 680px;
             margin: 0 auto;
-            padding: 40px 20px;
-            flex: 1; 
-            animation: fadeIn 0.8s ease-out;
+            padding: 80px 24px 40px;
+            flex: 1;
+            /* 苹果风格的淡入动画更自然、更慢 */
+            animation: appleFade 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 64px;
         }
 
         .profile-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 32px;
-            background: linear-gradient(145deg, #333, #222);
-            margin-bottom: 16px;
-            display: inline-block;
-            border: 1px solid #333;
+            width: 72px;
+            height: 72px;
+            border-radius: 16px; /* 苹果的圆角比 Kakao 稍尖一点，呈现“连续曲率”感 */
+            background: linear-gradient(180deg, #333 0%, #111 100%);
+            margin-bottom: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
         }
 
         h1 {
-            font-size: 1.5rem;
+            font-size: 2.5rem; /* 更大胆的标题 */
             font-weight: 600;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
+            letter-spacing: -0.015em;
+            margin-bottom: 12px;
         }
 
         p.description {
             color: var(--text-sub);
-            font-size: 0.9rem;
+            font-size: 1.1rem;
+            font-weight: 400;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
+        /* 列表部分 - 模仿 iOS 设置列表或 Apple News 风格 */
         .article-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            background-color: var(--secondary-bg);
+            border-radius: 20px;
+            overflow: hidden; /* 确保条目不会超出圆角容器 */
         }
 
         .article-item {
-            background-color: var(--card-bg);
-            padding: 20px 24px;
-            border-radius: 18px;
+            padding: 18px 24px;
             text-decoration: none;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
+            transition: background-color 0.3s ease;
+            /* 条目间的超细分割线 */
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .article-item:last-child {
+            border-bottom: none;
         }
 
         .article-item:hover {
-            background-color: var(--hover-bg);
-            transform: translateY(-2px);
-            border-color: #444;
+            background-color: var(--card-hover);
         }
 
         .article-info .title {
             display: block;
             color: var(--text-main);
-            font-weight: 400;
-            font-size: 1.05rem;
-            margin-bottom: 4px;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 2px;
         }
 
         .article-info .date {
             color: var(--text-sub);
-            font-size: 0.8rem;
-            font-weight: 300;
+            font-size: 0.85rem;
         }
 
+        /* 苹果风格的细箭头 */
         .arrow {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             stroke: var(--text-sub);
             fill: none;
-            stroke-width: 2;
+            stroke-width: 2.5;
             stroke-linecap: round;
             stroke-linejoin: round;
+            opacity: 0.6;
         }
 
-        /* 3. 关键修改：页脚样式，确保它在最底部 */
         footer {
-            padding: 40px 20px;
+            padding: 48px 24px;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-sub);
+            letter-spacing: 0.02em;
         }
 
         footer a {
-            color: var(--text-sub);
-            text-decoration: underline;
-            text-underline-offset: 4px;
+            color: var(--accent-blue);
+            text-decoration: none;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* 苹果标志性的平滑淡入 */
+        @keyframes appleFade {
+            from { opacity: 0; transform: scale(0.98) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         @media (max-width: 480px) {
-            h1 { font-size: 1.25rem; }
+            h1 { font-size: 2rem; }
+            .container { padding-top: 60px; }
         }
     </style>
 </head>
@@ -146,29 +160,29 @@
     <div class="container">
         <header>
             <div class="profile-img">
-                <svg viewBox="0 0 24 24" fill="none" style="padding: 20px;">
-                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#FEE500" stroke-width="2"/>
-                    <path d="M2 17L12 22L22 17" stroke="#FEE500" stroke-width="2"/>
-                    <path d="M2 12L12 17L22 12" stroke="#FEE500" stroke-width="2"/>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L12 22M2 12L22 12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.5"/>
                 </svg>
             </div>
-            <h1>我的分享库</h1>
-            <p class="description">探索、记录、分享。这里是我所有的技术笔记与文章。</p>
+            <h1>Archive</h1>
+            <p class="description">Notes, thoughts, and technical shares.</p>
         </header>
 
         <main class="article-list">
             <a href="https://shane2bytes.github.io/docshare/infinityDice_260415.html" class="article-item">
                 <div class="article-info">
                     <span class="title">infinity Dice 玩家广告压力缓解提案</span>
-                    <span class="date">2026.04.15 · 인피니티 다이스_광고 완화 제안</span>
+                    <span class="date">Apr 15, 2026 · Game Design</span>
                 </div>
                 <svg class="arrow" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"></path></svg>
             </a>
+            
             </main>
     </div>
 
     <footer>
-        <p>&copy; 2026 Powered by Shane</p>
+        <p>Copyright &copy; 2026 Shane.</p>
     </footer>
 
 </body>
