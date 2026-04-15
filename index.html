@@ -11,7 +11,7 @@
             --card-bg: #252525;        /* 卡片背景 */
             --text-main: #FFFFFF;      /* 主文字颜色 */
             --text-sub: #8E8E8E;       /* 副文字颜色 */
-            --accent-color: #FEE500;   /* Kakao 经典黄 (点缀用) */
+            --accent-color: #FEE500;   /* Kakao 经典黄 */
             --hover-bg: #2F2F2F;       /* 悬停背景 */
         }
 
@@ -21,24 +21,27 @@
             box-sizing: border-box;
         }
 
+        /* 1. 关键修改：让 body 成为 flex 容器并占满全屏高度 */
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             line-height: 1.6;
             display: flex;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 40px 20px;
+            flex-direction: column;
+            min-height: 100vh; /* 保证至少占满一屏高度 */
         }
 
+        /* 2. 关键修改：让容器自动撑开，占据除 footer 以外的所有空间 */
         .container {
             width: 100%;
             max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1; 
             animation: fadeIn 0.8s ease-out;
         }
 
-        /* 头部设计 */
         header {
             text-align: center;
             margin-bottom: 50px;
@@ -47,7 +50,7 @@
         .profile-img {
             width: 80px;
             height: 80px;
-            border-radius: 32px; /* Kakao 特色的圆角 */
+            border-radius: 32px;
             background: linear-gradient(145deg, #333, #222);
             margin-bottom: 16px;
             display: inline-block;
@@ -66,7 +69,6 @@
             font-size: 0.9rem;
         }
 
-        /* 列表部分 */
         .article-list {
             display: flex;
             flex-direction: column;
@@ -105,7 +107,6 @@
             font-weight: 300;
         }
 
-        /* 装饰箭头 */
         .arrow {
             width: 20px;
             height: 20px;
@@ -116,9 +117,9 @@
             stroke-linejoin: round;
         }
 
-        /* 页脚 */
+        /* 3. 关键修改：页脚样式，确保它在最底部 */
         footer {
-            margin-top: 60px;
+            padding: 40px 20px;
             text-align: center;
             font-size: 0.8rem;
             color: var(--text-sub);
@@ -130,15 +131,12 @@
             text-underline-offset: 4px;
         }
 
-        /* 动画 */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 响应式调整 */
         @media (max-width: 480px) {
-            body { padding: 30px 16px; }
             h1 { font-size: 1.25rem; }
         }
     </style>
@@ -166,13 +164,12 @@
                 </div>
                 <svg class="arrow" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"></path></svg>
             </a>
-
             </main>
-
-        <footer>
-            <p>&copy; 2026 Powered by Shane</p>
-        </footer>
     </div>
+
+    <footer>
+        <p>&copy; 2026 Powered by Shane</p>
+    </footer>
 
 </body>
 </html>
