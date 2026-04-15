@@ -3,32 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shane | Index</title>
+    <title>Shane | Archive</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        /* 定义变量：默认为亮色模式 (Light Mode) */
         :root {
-            --bg-color: #000000;          /* Apple 纯黑背景 */
-            --secondary-bg: #1c1c1e;     /* iOS 系统层级背景色 */
-            --text-main: #f5f5f7;        /* Apple 常用近白色 */
-            --text-sub: #86868b;         /* Apple 常用副文本灰色 */
-            --accent-blue: #0071e3;      /* Apple 经典蓝 */
-            --card-hover: #2c2c2e;
+            --bg-color: #f5f5f7;          /* Apple 系统背景色 */
+            --secondary-bg: #ffffff;     /* 卡片容器背景 */
+            --text-main: #1d1d1f;        /* 主标题文字 */
+            --text-sub: #86868b;         /* 副标题文字 */
+            --border-color: rgba(0, 0, 0, 0.05); /* 极细分割线 */
+            --accent-blue: #0071e3;
+            --hover-bg: #f5f5f7;
+            --toggle-bg: #e8e8ed;
+        }
+
+        /* 暗黑模式变量 (Dark Mode) */
+        [data-theme="dark"] {
+            --bg-color: #000000;
+            --secondary-bg: #1c1c1e;
+            --text-main: #f5f5f7;
+            --text-sub: #86868b;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --hover-bg: #2c2c2e;
+            --toggle-bg: #323234;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-font-smoothing: antialiased; /* 字体抗锯齿，更有果味 */
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.4s ease, color 0.4s ease; /* 让切换变色平滑 */
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+        }
+
+        /* 切换按钮样式 */
+        .theme-toggle {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            border-radius: 22px;
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .container {
@@ -37,8 +69,7 @@
             margin: 0 auto;
             padding: 80px 24px 40px;
             flex: 1;
-            /* 苹果风格的淡入动画更自然、更慢 */
-            animation: appleFade 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: appleFade 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         header {
@@ -49,17 +80,16 @@
         .profile-img {
             width: 72px;
             height: 72px;
-            border-radius: 16px; /* 苹果的圆角比 Kakao 稍尖一点，呈现“连续曲率”感 */
-            background: linear-gradient(180deg, #333 0%, #111 100%);
+            border-radius: 18px;
+            background: linear-gradient(180deg, #5e5e62 0%, #3a3a3c 100%);
             margin-bottom: 24px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border: 0.5px solid rgba(255, 255, 255, 0.1);
         }
 
         h1 {
-            font-size: 2.5rem; /* 更大胆的标题 */
+            font-size: 2.5rem;
             font-weight: 600;
             letter-spacing: -0.015em;
             margin-bottom: 12px;
@@ -68,29 +98,27 @@
         p.description {
             color: var(--text-sub);
             font-size: 1.1rem;
-            font-weight: 400;
             max-width: 400px;
             margin: 0 auto;
         }
 
-        /* 列表部分 - 模仿 iOS 设置列表或 Apple News 风格 */
+        /* 列表部分 */
         .article-list {
             display: flex;
             flex-direction: column;
             background-color: var(--secondary-bg);
             border-radius: 20px;
-            overflow: hidden; /* 确保条目不会超出圆角容器 */
+            overflow: hidden;
+            border: 1px solid var(--border-color);
         }
 
         .article-item {
-            padding: 18px 24px;
+            padding: 20px 24px;
             text-decoration: none;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background-color 0.3s ease;
-            /* 条目间的超细分割线 */
-            border-bottom: 0.5px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .article-item:last-child {
@@ -98,7 +126,7 @@
         }
 
         .article-item:hover {
-            background-color: var(--card-hover);
+            background-color: var(--hover-bg);
         }
 
         .article-info .title {
@@ -114,7 +142,6 @@
             font-size: 0.85rem;
         }
 
-        /* 苹果风格的细箭头 */
         .arrow {
             width: 16px;
             height: 16px;
@@ -131,38 +158,33 @@
             text-align: center;
             font-size: 0.75rem;
             color: var(--text-sub);
-            letter-spacing: 0.02em;
         }
 
-        footer a {
-            color: var(--accent-blue);
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* 苹果标志性的平滑淡入 */
         @keyframes appleFade {
-            from { opacity: 0; transform: scale(0.98) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 480px) {
             h1 { font-size: 2rem; }
-            .container { padding-top: 60px; }
+            .theme-toggle { top: 16px; right: 16px; }
         }
     </style>
 </head>
-<body>
+<body data-theme="light">
+
+    <button class="theme-toggle" id="theme-btn" aria-label="Toggle Theme">
+        <svg id="theme-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
 
     <div class="container">
         <header>
             <div class="profile-img">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L12 22M2 12L22 12" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-                    <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.5"/>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                    <path d="M12 2L12 22M2 12L22 12" stroke-linecap="round"/>
+                    <circle cx="12" cy="12" r="9"/>
                 </svg>
             </div>
             <h1>Archive</h1>
@@ -173,17 +195,41 @@
             <a href="https://shane2bytes.github.io/docshare/infinityDice_260415.html" class="article-item">
                 <div class="article-info">
                     <span class="title">infinity Dice 玩家广告压力缓解提案</span>
-                    <span class="date">Apr 15, 2026 · Game Design</span>
+                    <span class="date">2026.04.15 · Game Design</span>
                 </div>
                 <svg class="arrow" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"></path></svg>
             </a>
-            
             </main>
     </div>
 
     <footer>
-        <p>Copyright &copy; 2026 Shane.</p>
+        <p>Copyright &copy; 2026 Shane. Designed with precision.</p>
     </footer>
 
+    <script>
+        const themeBtn = document.getElementById('theme-btn');
+        const themeIcon = document.getElementById('theme-icon');
+        const body = document.body;
+
+        // 太阳图标内容
+        const sunIcon = `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`;
+        // 月亮图标内容
+        const moonIcon = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
+
+        // 初始化检查本地存储
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        setTheme(currentTheme);
+
+        themeBtn.addEventListener('click', () => {
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            setTheme(isDark ? 'light' : 'dark');
+        });
+
+        function setTheme(theme) {
+            body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            themeIcon.innerHTML = (theme === 'dark') ? sunIcon : moonIcon;
+        }
+    </script>
 </body>
 </html>
