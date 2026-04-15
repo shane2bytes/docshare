@@ -6,7 +6,6 @@
     <title>Shane | Archive</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* 1. 变量定义：亮色模式 */
         :root {
             --bg-color: #f5f5f7;
             --secondary-bg: #ffffff;
@@ -15,16 +14,17 @@
             --border-color: rgba(0, 0, 0, 0.05);
             --accent-blue: #0071e3;
             --hover-bg: #ebebed;
+            --skeleton-bg: #e8e8ea;
         }
 
-        /* 2. 变量定义：暗黑模式 */
         [data-theme="dark"] {
             --bg-color: #000000;
             --secondary-bg: #1c1c1e;
-            --text-main: #f5f5f7; /* 暗色模式下的图标和文字将变为浅灰色/白色 */
+            --text-main: #f5f5f7;
             --text-sub: #86868b;
             --border-color: rgba(255, 255, 255, 0.1);
             --hover-bg: #2c2c2e;
+            --skeleton-bg: #2c2c2e;
         }
 
         * {
@@ -32,7 +32,7 @@
             padding: 0;
             box-sizing: border-box;
             -webkit-font-smoothing: antialiased;
-            transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+            transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
                         color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
                         border-color 0.5s ease;
         }
@@ -46,7 +46,6 @@
             min-height: 100vh;
         }
 
-        /* 修复重点：右上角主题切换按钮 */
         .theme-toggle {
             position: fixed;
             top: 24px;
@@ -62,9 +61,7 @@
             justify-content: center;
             z-index: 100;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            
-            /* 关键修复：让图标颜色跟随变量 */
-            color: var(--text-main); 
+            color: var(--text-main);
         }
 
         .theme-toggle:hover {
@@ -123,11 +120,11 @@
         }
 
         .article-item {
-            padding: 20px 24px;
+            padding: 16px 20px;
             text-decoration: none;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 16px;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -139,20 +136,82 @@
             background-color: var(--hover-bg);
         }
 
+        /* 左侧缩略图 */
+        .article-thumbnail {
+            flex-shrink: 0;
+            width: 120px;
+            height: 72px;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: var(--skeleton-bg);
+            position: relative;
+        }
+
+        .article-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .article-thumbnail img.loaded {
+            opacity: 1;
+        }
+
+        /* 加载中的骨架动画 */
+        .article-thumbnail::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                90deg,
+                var(--skeleton-bg) 0%,
+                rgba(255,255,255,0.15) 50%,
+                var(--skeleton-bg) 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 10px;
+            transition: opacity 0.3s ease;
+        }
+
+        .article-thumbnail.loaded::before {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes shimmer {
+            0%   { background-position: -200% 0; }
+            100% { background-position:  200% 0; }
+        }
+
+        /* 右侧文字区域 */
+        .article-info {
+            flex: 1;
+            min-width: 0;
+        }
+
         .article-info .title {
             display: block;
             color: var(--text-main);
             font-weight: 500;
-            font-size: 1.05rem;
-            margin-bottom: 4px;
+            font-size: 1.0rem;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .article-info .date {
             color: var(--text-sub);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
+            line-height: 1.4;
         }
 
         .arrow {
+            flex-shrink: 0;
             width: 16px;
             height: 16px;
             stroke: var(--text-sub);
@@ -173,13 +232,14 @@
 
         @keyframes appleFade {
             from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 480px) {
             h1 { font-size: 2rem; }
             .container { padding-top: 80px; }
             .theme-toggle { top: 16px; right: 16px; }
+            .article-thumbnail { width: 96px; height: 58px; }
         }
     </style>
 </head>
@@ -203,6 +263,12 @@
 
         <main class="article-list">
             <a href="https://shane2bytes.github.io/docshare/infinityDice_260415.html" class="article-item">
+                <div class="article-thumbnail">
+                    <img
+                        data-src="https://api.screenshotone.com/take?access_key=RFYPCbUGL-IbGg&url=https%3A%2F%2Fshane2bytes.github.io%2Fdocshare%2FinfinityDice_260415.html&viewport_width=1280&viewport_height=720&image_quality=80&format=jpg&block_ads=true&block_cookie_banners=true"
+                        alt="infinity Dice 玩家广告压力缓解提案"
+                    />
+                </div>
                 <div class="article-info">
                     <span class="title">infinity Dice 玩家广告压力缓解提案</span>
                     <span class="date">2026.04.15 · 인피니티 다이스_광고 완화 제안</span>
@@ -213,15 +279,16 @@
     </div>
 
     <footer>
-        <p>Copyright &copy; 2026 Shane. Powered by GitHub Pages.</p>
+        <p>Copyright &copy; 2026 Shane.</p>
     </footer>
 
     <script>
-        const themeBtn = document.getElementById('theme-btn');
+        /* ── 主题切换 ── */
+        const themeBtn  = document.getElementById('theme-btn');
         const themeIcon = document.getElementById('theme-icon');
-        const body = document.body;
+        const body      = document.body;
 
-        const sunIcon = `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`;
+        const sunIcon  = `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`;
         const moonIcon = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
 
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -235,17 +302,40 @@
             setTheme(systemPrefersDark.matches ? 'dark' : 'light');
         }
 
-        systemPrefersDark.addEventListener('change', (e) => {
-            setTheme(e.matches ? 'dark' : 'light');
-        });
+        systemPrefersDark.addEventListener('change', e => setTheme(e.matches ? 'dark' : 'light'));
 
         themeBtn.addEventListener('click', () => {
-            const currentTheme = body.getAttribute('data-theme');
-            const targetTheme = (currentTheme === 'dark') ? 'light' : 'dark';
-            setTheme(targetTheme);
+            const current = body.getAttribute('data-theme');
+            setTheme(current === 'dark' ? 'light' : 'dark');
         });
 
         initTheme();
+
+        /* ── 缩略图懒加载 ── */
+        document.querySelectorAll('.article-thumbnail img[data-src]').forEach(img => {
+            const wrapper = img.parentElement;
+
+            img.addEventListener('load', () => {
+                img.classList.add('loaded');
+                wrapper.classList.add('loaded');
+            });
+
+            img.addEventListener('error', () => {
+                // 加载失败时显示占位图标
+                wrapper.classList.add('loaded');
+                wrapper.innerHTML = `
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-sub)" stroke-width="1.5" opacity="0.4">
+                            <rect x="3" y="3" width="18" height="18" rx="3"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <path d="M21 15l-5-5L5 21"/>
+                        </svg>
+                    </div>`;
+            });
+
+            // 触发加载
+            img.src = img.dataset.src;
+        });
     </script>
 </body>
 </html>
