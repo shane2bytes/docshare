@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>聊天记录 - 2Bytes × Skyisland</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: #EDEDED;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Phone frame */
+  .phone {
+    width: 390px;
+    min-height: 100vh;
+    background: #EDEDED;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 40px rgba(0,0,0,0.18);
+  }
+
+  /* Header */
+  .header {
+    background: #F7F7F7;
+    border-bottom: 1px solid #D9D9D9;
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .header-back {
+    color: #07C160;
+    font-size: 18px;
+    font-weight: 300;
+    cursor: pointer;
+  }
+
+  .header-title {
+    flex: 1;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
+    color: #191919;
+  }
+
+  .header-sub {
+    font-size: 11px;
+    color: #888;
+    text-align: center;
+    margin-top: 1px;
+  }
+
+  .header-dots {
+    font-size: 20px;
+    color: #555;
+    letter-spacing: 1px;
+  }
+
+  /* Chat area */
+  .chat-area {
+    flex: 1;
+    padding: 12px 0 24px;
+    overflow-y: auto;
+  }
+
+  /* Date divider */
+  .date-divider {
+    text-align: center;
+    margin: 18px 0 14px;
+  }
+
+  .date-divider span {
+    background: rgba(0,0,0,0.12);
+    color: #fff;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 10px;
+  }
+
+  /* Section divider for new conversation session */
+  .session-divider {
+    text-align: center;
+    margin: 22px 0 16px;
+    position: relative;
+  }
+
+  .session-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    right: 16px;
+    height: 1px;
+    background: #D0D0D0;
+  }
+
+  .session-divider span {
+    background: #EDEDED;
+    color: #999;
+    font-size: 11px;
+    padding: 0 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Message row */
+  .msg {
+    display: flex;
+    align-items: flex-start;
+    padding: 4px 16px;
+    gap: 10px;
+    margin-bottom: 2px;
+  }
+
+  /* Avatar */
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -1px;
+  }
+
+  .avatar-jangyg { background: #4A90D9; }
+  .avatar-shane  { background: #E67E22; }
+  .avatar-yan    { background: #8E44AD; }
+
+  .msg-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .msg-name {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  /* Bubble */
+  .bubble {
+    background: #fff;
+    border-radius: 4px 12px 12px 12px;
+    padding: 10px 13px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: #191919;
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-word;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    position: relative;
+  }
+
+  /* Bubble tail */
+  .bubble::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: -7px;
+    border: 7px solid transparent;
+    border-right-color: #fff;
+    border-left: 0;
+  }
+
+  /* Multi-line stat blocks */
+  .bubble .stats {
+    margin-top: 6px;
+    padding: 8px 10px;
+    background: #F5F5F5;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #444;
+  }
+
+  /* Special items */
+  .bubble .mention {
+    color: #07C160;
+    font-weight: 600;
+  }
+
+  .bubble .link {
+    color: #07C160;
+    word-break: break-all;
+    font-size: 13px;
+  }
+
+  /* Image placeholder */
+  .img-placeholder {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #F0F0F0;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #666;
+    margin: 2px 0;
+  }
+
+  /* File placeholder */
+  .file-placeholder {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #F5F5F5;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #555;
+  }
+
+  /* Mini-program */
+  .miniapp {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #F8F8F8;
+    border: 1px solid #E8E8E8;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #333;
+    min-width: 160px;
+  }
+
+  .miniapp-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #07C160, #05a14e);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .miniapp-label {
+    font-size: 10px;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  /* Emoji */
+  .emoji-tag {
+    font-size: 20px;
+    vertical-align: middle;
+  }
+
+  /* Proposal box */
+  .proposal {
+    background: #FFFBF0;
+    border: 1px solid #FFD566;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 6px;
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+
+  .proposal-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #C8830A;
+    font-size: 13px;
+  }
+
+  /* Bottom bar (decorative) */
+  .bottom-bar {
+    background: #F7F7F7;
+    border-top: 1px solid #D9D9D9;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .bottom-bar input {
+    flex: 1;
+    background: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 15px;
+    outline: none;
+    color: #aaa;
+  }
+
+  /* Legend */
+  .legend {
+    background: #fff;
+    border-bottom: 1px solid #EDEDED;
+    padding: 10px 16px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #555;
+  }
+
+  .legend-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  /* Responsive */
+  @media (max-width: 430px) {
+    .phone { width: 100%; box-shadow: none; }
+  }
+
+  @media (min-width: 600px) {
+    body { padding: 24px 0; background: #C8C8C8; }
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-back">‹</div>
+    <div>
+      <div class="header-title">2Bytes × Skyisland</div>
+      <div class="header-sub">장영국 · Shane · 闫春路(3)</div>
+    </div>
+    <div class="header-dots">···</div>
+  </div>
+
+  <!-- Participants legend -->
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-avatar avatar-jangyg">장</div>
+      <span><b>장영국</b> (2Bytes · 韩)</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-avatar avatar-shane">S</div>
+      <span><b>Shane</b> (2Bytes · 翻译)</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-avatar avatar-yan">闫</div>
+      <span><b>闫春路</b> (Skyisland)</span>
+    </div>
+  </div>
+
+  <!-- Chat -->
+  <div class="chat-area">
+
+    <div class="date-divider"><span>2025年 对话开始</span></div>
+
+    <!-- 1 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">저의 동료와 이야기를 진행하시면 보다 편하게 대화를 하실 수 있으실겁니다~!</div>
+      </div>
+    </div>
+
+    <!-- 2 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble"><span class="mention">@闫春路（Chunlu）| Skyisland</span> 闫总您好！我是2bytes的Shane，上面您和Sunny的聊天内容我已经看到了！<span class="emoji-tag">🤝</span></div>
+      </div>
+    </div>
+
+    <!-- 3 장영국 intro -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">일단 저희는 투바이트이며, 현재 한국에서 미니게임 사업을 진행하고 있습니다.<br>지금은 한국의 대형 플랫폼 KAKAO와 협업하고 있고, 26.02.24 위챗 인기 게임들을 가지고 서비스를 시작했습니다.</div>
+      </div>
+    </div>
+
+    <!-- 4 Shane translation -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">我们这边是 韩国2Bytes，现在在韩国做小游戏业务。<br>目前主要是在跟韩国的大厂Kakao合作，2月24号这边已经用微信上一些比较火的小游戏在kakao上上线了。</div>
+      </div>
+    </div>
+
+    <!-- 5 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">관련하여 한국 / 중국 여러 개발사와 협업을 진행하고 있는데요.<br>한국의 loadcomplete의 Chainsaw juice king을 귀사에서 H5로 포팅하였다고 Cherry님에게 들었습니다.</div>
+      </div>
+    </div>
+
+    <!-- 6 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">관련하여 협업을 진행하기 위해 어떤 식으로 논의를 해야하는지 궁금합니다.</div>
+      </div>
+    </div>
+
+    <!-- 7 장영국 [文件] -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">
+          <div class="file-placeholder">📄 <span>[文件]</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">另外我们现在也在和中韩这边的很多开发商一起合作。<br>听 Cherry 说，韩国 LoadComplete的 Chainsaw Juice King 这款游戏是贵司帮忙做的 H5 移植。<br>所以想了解一下，如果要推进合作的话，一般是通过什么样的方式来沟通和对接比较合适呢？</div>
+      </div>
+    </div>
+
+    <!-- 9 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">이해를 돕기 위해 투바이트의 회사소개 및 게임 퍼블리싱 플로우에 대한 문서도 함께 공유를 드립니다.</div>
+      </div>
+    </div>
+
+    <!-- 10 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">为了方便您了解，我们这边也一并分享了 2Bytes 的公司介绍 以及 游戏发行流程 的相关资料。</div>
+      </div>
+    </div>
+
+    <!-- 11 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">hi大家好</div>
+      </div>
+    </div>
+
+    <!-- 12 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">我们主要是发行业务，移植是包含在发行业务内的服务</div>
+      </div>
+    </div>
+
+    <!-- 13-15 闫 (连续消息) -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">在这之前我想先了解下技术细节，因为很多平台不支持unity引擎</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">这款游戏使用unity开发</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">咱们平台支持unity吗？</div>
+      </div>
+    </div>
+
+    <!-- 16 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">네 현재 서비스 중인 게임들도 상당수가 Unity입니다.</div>
+      </div>
+    </div>
+
+    <!-- 17-19 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">支持的，我们的SDK目前支持涵盖unity和cocos</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">我们这次上线的游戏中 应该有您熟悉的中国游戏 《猪了个猪》，他们也是用unity开发的</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">目前顺利地在平台上线了~</div>
+      </div>
+    </div>
+
+    <!-- 20-21 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">那很不错呀</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">那这样的话就是看看咱们平台方的合作模式了</div>
+      </div>
+    </div>
+
+    <!-- 22 장영국 x3 images + text -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble"><div class="img-placeholder">🖼️ 截图</div></div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble"><div class="img-placeholder">🖼️ 截图</div></div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble"><div class="img-placeholder">🖼️ 截图</div></div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">보시다시피 유니티 기반의 게임들도 우리 SDK와 연동하여 잘 서비스되고 있습니다.</div>
+      </div>
+    </div>
+
+    <!-- 23 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">上面是猪了个猪韩国版在kakao平台上的版本截图</div>
+      </div>
+    </div>
+
+    <!-- 24 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">这类产品预计营收规模是怎么样的，主要靠广告是吗</div>
+      </div>
+    </div>
+
+    <!-- 25 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble"><span class="mention">@장영국</span> 저희의 협업 방식을 물어봤습니다.</div>
+      </div>
+    </div>
+
+    <!-- 26 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">현재 해당 게임은 IAA + IAP로 구성되어 있죠?</div>
+      </div>
+    </div>
+
+    <!-- 27 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">juice king有一定比例的iap</div>
+      </div>
+    </div>
+
+    <!-- 28 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">타 마켓에서의 IAA와 IAP의 매출 비중은 어떻습니까?</div>
+      </div>
+    </div>
+
+    <!-- 29 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">我们也了解到目前这款游戏是 IAA + IAP 的变现结构，想了解一下，在其他平台上的话，IAA 和 IAP 的收入占比大概是怎样的？</div>
+      </div>
+    </div>
+
+    <!-- 30-32 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">30-50%</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">详细的我还需要确认下，印象中这款占比不低</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">比其他休闲游戏都高</div>
+      </div>
+    </div>
+
+    <!-- 33 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">是说iap占总流水的30~50%对吧？</div>
+      </div>
+    </div>
+
+    <!-- 34 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">是的</div>
+      </div>
+    </div>
+
+    <!-- 35 장영국 data -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">
+          현재 플랫폼이 이제 막 런칭한 시점이라 수익 규모를 논하기에는 조금 이른감이 있습니다만,
+          <div class="stats">
+            📊 평균 eCPM: 한화 20,000 ~ 25,000원<br>
+            👤 인당 광고 조회 수: 10 ~ 19회 (일반 2~3회)<br>
+            💰 인당 광고 매출: $0.13 ~ $0.15<br>
+            🔁 리텐션: D1 35%~40% / D7 25%
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 36 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">
+          目前平台刚上线不久，现在谈整体收入规模可能还稍微早一点，不过可以先给您参考一下目前的数据：
+          <div class="stats">
+            📊 平均 eCPM：2万~2.5万韩元（约¥100~120元）<br>
+            👤 人均广告观看次数：10~19次（一般平台约2~3次）<br>
+            💰 人均广告收入：$0.13~$0.15（约¥0.9~1.05元）<br>
+            🔁 留存：D1 35%~40% / D7 25%
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 37 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">현재 카카오에서 런칭 후 안정화 이후 마케팅을 진행하기로 한 상태임에 비해 한국에서는 굉장히 좋은 지표를 보여주고 있습니다. 이로 인해 한국 / 중국의 다양한 개발사에서 최근 입점에 대한 엄청난 문의가 쏟아지고 있습니다.<br><br>다만 저희는 오픈 플랫폼이 아닌 저희가 엄선하여 선별한 소수의 게임만 최적화하여 런칭하는 것이 목표이므로 그 기준으로만 게임을 소싱합니다. Chainsaw Juice King은 제가 이미 재미있게 했던 게임이고, 경쟁력이 있다고 판단되어 귀사에게 연락을 드린 것입니다.<br><br>참고로 저희는 Load Complete과도 파트너사입니다.</div>
+      </div>
+    </div>
+
+    <!-- 38 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">目前在 Kakao 上线之后，原本是计划先稳定一段时间再开始做营销的，但从现在的数据来看，在韩国已经算是非常不错的表现了。也正因为这样，最近韩国和中国很多开发商都在联系我们，想把游戏接入平台。<br><br>不过我们平台并不是开放平台，而是只会挑选少数我们认为质量好、有潜力的游戏来做优化后上线，所以在游戏选择上会比较严格。<br><br>Chainsaw Juice King 这款游戏我自己之前就玩过，也觉得挺有竞争力的，所以这次才会主动联系贵司。<br><br>另外也跟您说明一下，我们和 LoadComplete 本身也是合作伙伴关系。</div>
+      </div>
+    </div>
+
+    <!-- 39-43 闫 (series) -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">了解，我们和全球很多家顶级开发者都有合作，帮助他们在中国发行小游戏，最近也在帮助一部分合作伙伴在tiktok发行小游戏，tiktok下周还会给我们颁奖，我们是他们的头部合作伙伴</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">所以如果数据不错我们可以尝试将很多优质游戏上线kakao，说回来juice king，可能首先要确认下大体的预期，既然咱们和loadcomplete有合作，那可能沟通起来更简单一些，我们和他们介绍的时候也要沟通下预期，很多合作伙伴授权我们新的区域的时候也会问到</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">我们目前默认签约中国地区的授权，要增加新的区域，也是需要跟合作伙伴沟通</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">当然loadcomplete也可能会选择直接自己发行而不通过我们，这也是一个选择</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">
+          <div class="img-placeholder">🖼️ TikTok排行榜截图</div>
+          <br>排行榜第一、第六都是我们在tiktok发行的产品
+        </div>
+      </div>
+    </div>
+
+    <!-- 44 Shane Korean translation -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble"><span class="mention">@장영국</span><br><br>저희는 글로벌 Top 개발사들과도 많이 협업하고 있고, 그들의 중국 미니게임 퍼블리싱을 지원해왔습니다. 최근에는 일부 파트너들의 TikTok 미니게임 퍼블리싱도 함께 진행하고 있습니다. 다음 주에 TikTok 쪽에서도 저희에게 시상을 할 예정이라, 현재 저희는 그쪽에서도 주요 파트너로 협력하고 있습니다.<br><br>그래서 만약 지표가 괜찮게 나온다면, 여러 퀄리티 좋은 게임들을 Kakao 플랫폼에 출시하는 것도 같이 검토해볼 수 있을 것 같습니다.<br><br>다시 Juice King 이야기로 돌아가면, 우선 대략적인 예상 지표를 먼저 맞춰보는 게 좋을 것 같습니다. 이미 LoadComplete와 협업 관계가 있으시다고 해서, 그 부분은 커뮤니케이션이 조금 더 수월할 것 같네요.<br><br>현재 저희 기본 계약은 중국 지역 퍼블리싱 권한 기준으로 되어 있어서, 만약 추가 지역을 포함하게 된다면 파트너사와 별도 협의가 필요한 상황입니다. 물론 LoadComplete 쪽에서 직접 퍼블리싱을 진행하는 방식도 하나의 선택지라고 생각합니다.</div>
+      </div>
+    </div>
+
+    <!-- 45 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">LoadComplete과는 이미 이야기를 나눈 상태이고, 한국 서비스에 대한 판권은 LoadComplete이 가지고 있으나 H5 버전은 귀사가 보유하고 있기에 논의를 해보라는 입장입니다. 저희는 참고로 H5 버전으로 서비스를 진행하고 있습니다.</div>
+      </div>
+    </div>
+
+    <!-- 46 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">我们这边其实已经和 LoadComplete 沟通过了。韩国服务的发行权是在 LoadComplete 那边，不过 H5 版本是贵司持有的，所以他们那边的意思是可以让我们和贵司直接沟通看看。<br><br>顺便说明一下，我们这边平台目前主要也是以 H5 版本来做服务的。</div>
+      </div>
+    </div>
+
+    <!-- 47 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">明白，那就是咱们先聊一下合作模式，然后我们再和研发方沟通</div>
+      </div>
+    </div>
+
+    <!-- 48 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">네 알겠습니다. 다음주 월요일 load complete c-level과 미팅이 잡혀있는데 한국 판권 관련해서 이야기를 더 해보고 말씀드릴게요</div>
+      </div>
+    </div>
+
+    <!-- 49 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">好的，闫总！ 我们这边下周一和 LoadComplete 的 C-Level 有个会议，到时候会再跟他们详细聊一下韩国发行权相关的事情，聊完之后再跟您这边同步一下。</div>
+      </div>
+    </div>
+
+    <!-- 50 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">好的</div>
+      </div>
+    </div>
+
+    <!-- 51 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble"><span class="emoji-tag">🙏</span></div>
+      </div>
+    </div>
+
+    <!-- 52 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble"><span class="emoji-tag">🫡</span></div>
+      </div>
+    </div>
+
+    <!-- SESSION 2 -->
+    <div class="session-divider"><span>📅 下周一 · LoadComplete会议后</span></div>
+
+    <!-- 53 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">안녕하세요~!<br><br>오늘 로드컴플릿과 미팅을 진행하였습니다.<br>• NAYEON GONG — Head of Business Dept<br>• Lee Sang Hoon — Executive Director of Business</div>
+      </div>
+    </div>
+
+    <!-- 54 장영국 -->
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">로드 컴플릿의 의견은 H5 포팅은 Skyisland가 진행하였기에 SkyIsland와 논의하고, RS 구조는 (정확히는 IP 로열티 부분) SkyIsland와 로드 컴플릿이 이후 논의하는 방향에 대해 제안을 하였습니다.</div>
+      </div>
+    </div>
+
+    <!-- 55-56 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">今天我们已经和 LoadComplete 开了个会。<br>参会人员有：Nayeon Gong（Head of Business Dept）、Lee Sang Hoon（Executive Director of Business）<br><br>LoadComplete 那边的意见是：因为 H5 的移植是由 SkyIsland 完成的，所以具体合作可以先和 SkyIsland 这边进行沟通。至于 RS 分成结构（更准确来说是 IP royalty 的部分），他们建议是由 SkyIsland 和 LoadComplete 后续再单独协商确定。</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble"><span class="mention">@闫春路（Chunlu）| Skyisland</span> 请闫总参考哈！</div>
+      </div>
+    </div>
+
+    <!-- 57 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">好的谢谢同步，那么平台侧的分成政策是怎么样的？</div>
+      </div>
+    </div>
+
+    <!-- 58 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">우리는 google play / app store 같은 오픈 플랫폼이 아니므로 수수료 정책이 아니다. 엄선된 게임을 선별해서 직접 소싱하여 RS를 지급하는 방식이고, RS는 현재 대부분 개발사 기준으로 <b>Gross 15%</b>를 지급하고 있습니다. 만약 개발사의 개발 공수가 필요하다면 소정의 LF / MG도 함께 검토합니다.</div>
+      </div>
+    </div>
+
+    <!-- 59 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">我们这边不是像 Google Play / App Store 那样的开放平台，所以也不是走平台抽成那种手续费模式。我们是筛选优质游戏后自己去做引入（sourcing），然后按 RS 分成给开发方。目前大多数开发商的合作模式是按照 <b>Gross 的 15%</b> 进行 RS 分成。如果项目需要开发方投入额外的开发资源的话，我们也可以一起考虑提供一定的 LF / MG。</div>
+      </div>
+    </div>
+
+    <!-- 60 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">抱歉延迟回复，想问下这次合作预期能有的收益规模是怎么样的？ 我们可能要评估一下接入的性价比。另外如果有接入的详情文档就更好了，有助于我们分析程序侧的成本</div>
+      </div>
+    </div>
+
+    <!-- 61-62 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">네 SDK 연동가이드 중문 버전을 금일 중 공유드리겠습니다</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">예상 수익은 게임마다 상이하지만 카카오 외에 현재 논의 중인 삼성 그리고 저희 자사 플랫폼까지 포함하여 합치면 괜찮을 듯 싶습니더</div>
+      </div>
+    </div>
+
+    <!-- 63 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">好的，SDK 接入指南的中文版今天会先发给您。<br><br>预期收益的话，每个游戏会有差异，不过除了 Kakao 之外，目前还在推进 三星 以及我们自有平台的合作，整体加在一起的话，收益这块应该还是比较可观的。</div>
+      </div>
+    </div>
+
+    <!-- 64 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">好的谢谢</div>
+      </div>
+    </div>
+
+    <!-- 65 장영국 SDK links -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">
+          [투바이트 미니게임센터 SDK 연동 가이드 문서 : Tudada]<br>
+          - 위챗 SDK과 최대한 유사하게 개발<br>
+          - 현재 협업 진행 중인 10여 종의 게임 모두 연동 기간 일주일 내 완료<br>
+          - SDK 연동 가이드는 모두 중문화로 되어 있어 중국 현지 개발사에게 편리<br><br>
+          1. Unity 개발 가이드<br>
+          <span class="link">https://2bytes.notion.site/Unity-0604d79739b98257825801d6d9b7e733</span><br><br>
+          2. 웹 게임 개발 가이드<br>
+          <span class="link">https://2bytes.notion.site/TudadaSDK-H5-67a4d79739b9839e9acb813ad01375b5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 66 Shane SDK -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">
+          给您这边同步一下 Tudada（2Bytes）小游戏中心 SDK 接入相关说明：<br>
+          整体是尽量按照微信 SDK 的结构来做的，所以目前在合作的 10多款游戏，基本都在一周内完成接入，而且 SDK 文档全部是中文版本，对国内开发团队来说会比较友好<br><br>
+          1️⃣ Unity 接入指南<br><span class="link">https://2bytes.notion.site/Unity-0604d79739b98257825801d6d9b7e733</span><br><br>
+          2️⃣ Web（H5）接入指南<br><span class="link">https://2bytes.notion.site/TudadaSDK-H5-67a4d79739b9839e9acb813ad01375b5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 67 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">好的收到</div>
+      </div>
+    </div>
+
+    <!-- 68 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble"><span class="emoji-tag">🫡</span></div>
+      </div>
+    </div>
+
+    <!-- SESSION 3 -->
+    <div class="session-divider"><span>📅 技术评估阶段 · MG谈判</span></div>
+
+    <!-- 69 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">您好我们的技术同事正在抓紧评估接入的难度，还想请问下是否可以支付<b>5万美金的MG</b>？ 谢谢</div>
+      </div>
+    </div>
+
+    <!-- 70-73 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">MG 수준은 한국 구글 / 애플 마켓에 런칭을 한 이력이 존재하는지 아니면 H5로 한국에 처음 진출하는지에 따라 나뉩니다.</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">한국에 처음 진출히는 것이 아닌 오리지널치고 말씀하신 MG는 다소 높습니다.</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">H5로 한국에 처음 진출하는 오리지널 게임 같은 경우는 MG를 조금 높게 책정하는 것을 검토할 수 있으나 이미 한국에 런칭 경험이 있거나 런칭된 상태에서 H5 한국 판권만 계약한다면 말씀하신 MG는 다소 높습니다.</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">그리고 궁금한 부분은 만약 이 게임의 한국 판권을 계약한다면 Saygames와 논의를 해야하는 것으로 알고 있습니다. MG 형태 계약이 될텐데 Saygames와 사전 협의를 Skyisland가 진행하나요?</div>
+      </div>
+    </div>
+
+    <!-- 74 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">MG 这块主要是根据游戏在韩国的上线情况来区分的。<br><br>如果是已经在韩国 Google Play / App Store 上线过的游戏，或者本身已经在韩国有发行经验的，再来单独签 H5 韩国版权的话，您这边提到的 MG 有点偏高了一些。<br><br>但如果是第一次仅以 H5 形式进入韩国市场的游戏，那我们是可以考虑把 MG 适当往上调的。<br><br>另外还有一个点想确认一下：如果这款游戏要签韩国版权的话，我们理解是需要和 SayGames 那边一起沟通的。这种 MG 模式的合作，是由 SkyIsland 这边提前去和 SayGames 做沟通协调吗？</div>
+      </div>
+    </div>
+
+    <!-- 75 闫 + images -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">是的我们已经和SayGames沟通过，确实第一次上线不清楚预期收益，希望尽量减少风险，如果以后分成收益不错就不需要mg了。 我们和tiktok也是类似的合作模式；刚在三亚领了奖</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble"><div class="img-placeholder">🖼️ 三亚颁奖照片</div></div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble"><div class="img-placeholder">🖼️ 三亚颁奖照片</div></div>
+      </div>
+    </div>
+
+    <!-- 76 Shane Korean -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble"><span class="mention">@장영국</span><br><br>네, 저희도 이미 SayGames 쪽과는 커뮤니케이션을 진행했습니다. 첫 런칭이다 보니 예상 수익에 대한 불확실성이 있어서, 가능한 리스크를 줄이고 싶다는 입장입니다. 추후에 리베뉴 쉐어 성과가 잘 나오면 MG 없이 진행하는 방향도 가능할 것 같습니다.<br><br>저희가 TikTok이랑도 비슷한 방식으로 협업하고 있고요, 참고로 최근에 삼아（三亚）에서 시상도 받고 왔습니다.</div>
+      </div>
+    </div>
+
+    <!-- 77-79 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">한국 유저층이 Chainsaw Juice King 을 구글 및 애플 마켓에서 즐겼는지가 중요합니다. 그 비율에 따라 H5 마켓에서의 스코어가 결정될 것 같은데요. 현재 저희가 kakaopay 에 입점한 게임들은 한국 게임 2종을 제외하고 중국 게임 7종은 전부 H5 버전만 한국에 존재하는 오리지널 컨텐츠들입니다.</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">말씀하신대로 런칭 후 매출 볼륨과 RS 지급량에 따라 MG를 후지급하는 케이스도 계약에 존재합니다. 현재 그런 방향으로 중국 개발사와 많이 진행 중입니다.</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">적절한 저희가 생각하는 MG 수준은 차주 내부적으로 논의 후 말씀드리겠습니다. （월 RS 얼마 이하일때 기준의 MG가 되겠네요）</div>
+      </div>
+    </div>
+
+    <!-- 80-82 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">这个点主要还是要看，韩国用户之前在 Google / Apple 商店 Chainsaw Juice King 的用户量。因为这个用户占比，基本会直接影响到H5 渠道这边的表现。目前我们在 KakaoPay 上线的游戏里，除了 2款韩国本地游戏之外，其他 7款中国游戏全部都是只在韩国以 H5 版本上线的。</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">是的，像您说的那种根据上线后的营收规模和实际 RS 分成，再去后置支付 MG 的模式，我们这边也是有过这种合约方式的。目前我们也在和不少中国开发商按这个方式在推进合作。</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">至于我们这边认为比较合适的 MG 水平，会在下周内部讨论之后再给您一个具体反馈。（大概会是一个以月 RS 达到某个区间为基准来设定的 MG）</div>
+      </div>
+    </div>
+
+    <!-- 83 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">好的</div>
+      </div>
+    </div>
+
+    <!-- 84-85 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble"><span class="emoji-tag">🫡</span></div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble"><span class="emoji-tag">🤝🤝🙏</span></div>
+      </div>
+    </div>
+
+    <!-- SESSION 4 -->
+    <div class="session-divider"><span>📅 IAP上线方案确认</span></div>
+
+    <!-- 86-87 IAP question -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">안녕하세요. 궁금한 사항이 있어서 문의를 드립니다.<br><br>현재 Chainsaw Juice King은 IAA + IAP 형태로 알고 있습니다. 혹시 위챗 미니게임 첫 런칭 시에도 IAP가 들어갔었나요? 아니면 IAA로 런칭을 진행하고 IAP가 업데이트 되었나요?<br><br>저희는 현재 IAA만 서비스를 하고 있으며, IAP 버전은 26년 5월에 업데이트 예정입니다. Chainsaw Juice King이 만약 저희가 보유한 플랫폼들에 런칭한다면 IAA 먼저 런칭 후 5월 이후 IAP를 업데이트 하는 형태로 서비스를 하면 어떨까해서 여쭤봅니다.</div>
+      </div>
+    </div>
+
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble"><span class="mention">@闫春路（Chunlu）| Skyisland</span> 上午好，闫总～<br><br>这边有个问题想跟您确认一下：<br><br>目前了解到 Chainsaw Juice King 是 IAA + IAP 的模式。想问一下，当初在微信小游戏刚上线的时候，IAP 是一开始就有的，还是先用 IAA 上线，后面再追加 IAP 的？<br><br>之所以这么问，是因为我们这边<b>目前只支持 IAA，IAP 版本预计是在 2026年5月上线</b>。<br><br>所以在想，如果这款游戏接入我们平台的话，是否可以先以 IAA 版本上线，之后在5月再平滑地接入 IAP，做一个比较自然的过渡。<br><br>也想听听您这边的想法 👍</div>
+      </div>
+    </div>
+
+    <!-- 88-89 장영국 + Shane -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">런칭 초기에는 이 부분의 진입을 막고 IAA로 서비스 → 5월 이후 IAP 페이지 오픈 이런 형태를 의미합니다.<br><br><div class="img-placeholder">🖼️ 说明截图</div></div>
+      </div>
+    </div>
+
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">在上线初期先把 IAP 入口关闭，只用 IAA 来做服务，然后5月之后再开放 IAP 页面，大概是这样一个节奏。</div>
+      </div>
+    </div>
+
+    <!-- 90-93 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">IAP是一开始就有的，我个人感觉，针对韩国用户的话，没有IAP比较可惜，因为用户的付费习惯会更好。 先IAA然后过渡到IAP也可以的，我们另外一款游戏就是这个历程</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">
+          <div class="miniapp">
+            <div class="miniapp-icon">🎮</div>
+            <div>
+              <div>[小程序] 灵魂计划</div>
+              <div class="miniapp-label">微信小程序</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">这是IAA</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">
+          <div class="miniapp">
+            <div class="miniapp-icon">🎮</div>
+            <div>
+              <div>[小程序] 爆裂守卫</div>
+              <div class="miniapp-label">微信小程序</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSION 5 -->
+    <div class="session-divider"><span>📅 内部讨论后 · MG最终报价</span></div>
+
+    <!-- 94 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">
+          그리고 저희가 내부적으로 회의를 진행한 의견을 말씀드립니다.<br><br>
+          현재 저희는 KAKAOPAY 런칭 후 많은 한국 대형 플랫폼사에서 미니게임센터 개설 문의를 받고 있습니다. 대표적으로 <b>SAMSUNG MONIMO / MUSINSA / K-BANK / KAKAO TALK</b> 이런 업체들과 현재 추가 협업을 논의 중에 있습니다.<br><br>
+          이에 따라 KAKAOPAY 이후 많은 대형 플랫폼에 입점이 될 예정인데 이로 인해 아직 정확한 RS 규모를 파악하긴 어렵습니다.
+          <div class="proposal">
+            <div class="proposal-title">💰 MG 제안 조건</div>
+            • 런칭 후 3개월 후 월 매출 <b>30,000 USD 미만</b> 시 MG 일괄 지급<br>
+            • MG는 <b>30,000 USD</b> 규모
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 95 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">
+          <span class="mention">@闫春路（Chunlu）| Skyisland</span> 另外这边也同步一下我们内部讨论后的想法：<br><br>
+          目前我们在 KakaoPay 上线之后，已经收到了不少韩国头部平台关于小游戏中心合作的咨询。<br><br>
+          比较代表性的有：<br>
+          • Samsung Monimo（韩国三星金融/卡类平台）<br>
+          • Musinsa（韩国最大的服装电商平台）<br>
+          • K-Bank（韩国前三的互联网银行）<br>
+          • KakaoTalk（韩国最大的即时通讯平台）<br><br>
+          在先不考虑其他复杂因素的情况下，我们这边先给出一个比较直接的合作提案：
+          <div class="proposal">
+            <div class="proposal-title">💰 MG 合作提案</div>
+            • 上线3个月后，如果月收入低于 <b>30,000 USD</b>，则一次性补足 MG<br>
+            • MG 金额为 <b>30,000 USD</b>
+          </div>
+          可以先帮忙看一下这个方案是否合适 🙏
+        </div>
+      </div>
+    </div>
+
+    <!-- 96-98 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">其实我们给的也是比较直接的 <span class="emoji-tag">🤦</span></div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">先报价十万再慢慢降低到五万也可以，我们内部以及跟合作伙伴沟通过程中，<b>五万是底线</b>，我直接给报出来了 <span class="emoji-tag">😅</span></div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">我也喜欢直来直去</div>
+      </div>
+    </div>
+
+    <!-- 99 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">해당 규모는 저희가 현재 계약한 게임의 액수보다 많이 높습니다. 아시다시피 저희가 지금 위챗 랭킹에 배치된 게임들도 몇 종 보유하고 있는데 이 게임들도 MG 볼륨이 그렇게 크지 않아요. ㅠㅠ</div>
+      </div>
+    </div>
+
+    <!-- 100 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">闫总，说实话这个 MG 规模其实已经明显高于我们目前已签约游戏的水平了。您也知道，我们这边现在也有几款在微信排行榜上的游戏，那些项目的MG 体量也没有到这么高</div>
+      </div>
+    </div>
+
+    <!-- 101-104 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">这个理解，我也打听了一下，大家普遍收益不是太高，所以也比较纠结</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">我们需要尽可能多的给合作伙伴分钱，精力有限，必须去算投入产出比的</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">我们正在大力推进游戏上线tiktok小游戏，也不需要预付，就是因为好的游戏利润十几万美金了，差的也有几千。</div>
+      </div>
+    </div>
+    <div class="msg">
+      <div class="avatar" style="width:40px;flex-shrink:0;"></div>
+      <div class="msg-body">
+        <div class="bubble">所以和咱们合作就是最初需要一个保证，如果收益不错，我们也是不需要mg的</div>
+      </div>
+    </div>
+
+    <!-- 105 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">네 조금 더 고민을 해보겠습니다</div>
+      </div>
+    </div>
+
+    <!-- 106 闫 -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">尤其是咱们即便付给我们mg，也是三个月之后了，我们跟很多合作方第一次合作的时候，都是签约直接转账<b>五万美金mg</b></div>
+      </div>
+    </div>
+
+    <!-- 107 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">계약 사항은 회사마다 많은 차이가 있습니다. 현재 계약된 게임들도 각자 조금 상이한 계약 방식을 체결한 상태입니다.</div>
+      </div>
+    </div>
+
+    <!-- 108 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">您的顾虑我们非常理解。目前韩国小游戏市场确实仍处于早期发展阶段，Kakao 平台本身也在持续完善和成长中。<br><br>不过，正因为市场尚未完全成熟，反而意味着更大的先发优势和增长空间。我们此前合作的一些中国开发商，正是基于这一点，看到了韩国小游戏市场的空白和潜力，选择提前布局。对于优质的游戏，我们也都是尽可能将资源分给它们，尽可能将收益最大化。从中长期来看，随着平台流量与用户习惯的逐步建立，早期进入的产品会更容易占据有利位置，形成持续收益。</div>
+      </div>
+    </div>
+
+    <!-- 109 장영국 -->
+    <div class="msg">
+      <div class="avatar avatar-jangyg">장</div>
+      <div class="msg-body">
+        <div class="msg-name">장영국</div>
+        <div class="bubble">그리고 다른 런칭된 게임들은 한국 마켓에 아예 진출한 적이 없는 저희가 보유한 독점 계약입니다. 즉 Google play와 IOS 마켓에 서비스 이력이 없습니다.</div>
+      </div>
+    </div>
+
+    <!-- 110 Shane -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble">我们目前已经签约的游戏，合同结构也都是各自不一样的。<br>另外补充一点，其他已经上线的游戏，都是在韩国市场完全没有上线过的项目，属于我们这边拿到的独家合作内容。也就是说，这些游戏之前是没有在 Google Play 或 iOS 上线记录的。</div>
+      </div>
+    </div>
+
+    <!-- 111 闫 (long) -->
+    <div class="msg">
+      <div class="avatar avatar-yan">闫</div>
+      <div class="msg-body">
+        <div class="msg-name">闫春路（Chunlu）| Skyisland</div>
+        <div class="bubble">是这样，我们选择一个平台的时候，还是会判断自己能做什么，有什么优势，我们的优势就是UA和研发结合产生的倍增效应， 这是纯研发和纯发行都比不了的，比如上面我发的灵魂计划那款游戏，每日流水规模从不到一万人民币到十万人民币，并且还在上升，就是我们针对流量算法调优的结果。<br><br>早期红利确实很不错，但是风险也是巨大的，如果有精力的话我们也会尝试，只是优先级的问题。我们曾经在国内尝试了大量小游戏渠道，中国有非常多小游戏平台，大的比如支付宝，快手，都是日活几亿的小游戏平台，但是收益远远无法和抖音和微信比较。</div>
+      </div>
+    </div>
+
+    <!-- 112 Shane Korean -->
+    <div class="msg">
+      <div class="avatar avatar-shane">S</div>
+      <div class="msg-body">
+        <div class="msg-name">Shane</div>
+        <div class="bubble"><span class="mention">@장영국</span><br><br>저희는 플랫폼을 선택할 때, 우리가 어떤 걸 잘할 수 있는지, 어떤 강점이 있는지를 먼저 봅니다. 저희의 가장 큰 강점은 UA(유저 획득)와 개발이 결합되면서 나오는 시너지(배수 효과)인데, 이건 순수 개발사나 순수 퍼블리셔만으로는 만들기 어려운 부분입니다.<br><br>예를 들어 제가 전에 말씀드린 '영혼 계획' 프로젝트 같은 경우, 일 매출이 1만 위안도 안 되던 수준에서 10만 위안까지 올라왔고, 지금도 계속 상승 중입니다. 이건 저희가 트래픽 알고리즘에 맞춰 지속적으로 최적화한 결과입니다.<br><br>초기에는 확실히 수익 기회(초기 보너스)가 큰 건 맞지만, 그만큼 리스크도 꽤 큰 편입니다. 그래서 여력이 되면 저희도 시도는 해보겠지만, 현재로서는 우선순위의 문제라고 보시면 될 것 같습니다.<br><br>그리고 저희가 예전에 중국 내에서 다양한 미니게임 채널을 많이 테스트해봤는데, 중국에는 알리페이, 콰이쇼우 같은 DAU 수억 규모의 플랫폼들도 많지만, 실제 수익성은 도우인이나 위챗과는 비교가 안 되는 수준이었습니다.</div>
+      </div>
+    </div>
+
+    <div class="date-divider"><span>— 聊天记录结束 —</span></div>
+
+  </div>
+
+  <!-- Bottom bar (decorative) -->
+  <div class="bottom-bar">
+    <span style="font-size:22px">⊕</span>
+    <input type="text" placeholder="微信" disabled>
+    <span style="font-size:22px">🎤</span>
+    <span style="font-size:22px">😊</span>
+  </div>
+
+</div>
+</body>
+</html>
