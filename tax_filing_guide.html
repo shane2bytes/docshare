@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>韩国综合所得税申告引导 | 모두채움 신고 가이드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0066CC;
+    --primary-dark: #004499;
+    --primary-light: #3388DD;
+    --primary-ultra-light: #E8F4FF;
+    --success: #00C853;
+    --success-light: #E8FFF0;
+    --warning: #FF6B35;
+    --warning-light: #FFF3EE;
+    --bg: #F0F4FA;
+    --card-bg: #FFFFFF;
+    --text-dark: #1A2B4A;
+    --text-mid: #4A5568;
+    --text-light: #718096;
+    --border: #DDE4EF;
+    --shadow: 0 4px 20px rgba(0,102,204,0.1);
+    --shadow-hover: 0 8px 30px rgba(0,102,204,0.18);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+  body.ko { font-family: 'Noto Sans KR', 'Noto Sans SC', sans-serif; }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    background: linear-gradient(135deg, #003380 0%, #0055B3 40%, #0066CC 70%, #0088FF 100%);
+    padding: 40px 24px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+  .site-header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 400px; height: 400px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+
+  /* ===== LANGUAGE SWITCHER ===== */
+  .lang-switcher {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    display: flex;
+    gap: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 30px;
+    padding: 4px;
+    z-index: 100;
+  }
+  .lang-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    font-family: inherit;
+  }
+  .lang-btn.active {
+    background: #fff;
+    color: var(--primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .lang-btn:hover:not(.active) {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+  .header-badge .dot {
+    width: 8px; height: 8px;
+    background: #00ff88;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+  .site-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .site-header p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 6px;
+  }
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+  }
+
+  /* ===== PROGRESS OVERVIEW (floats below header) ===== */
+  .progress-card {
+    max-width: 860px;
+    margin: -40px auto 0;
+    padding: 0 16px;
+    position: relative;
+    z-index: 10;
+  }
+  .progress-inner {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 40px rgba(0,51,128,0.15);
+    padding: 28px 32px;
+  }
+  .progress-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .progress-label {
+    font-size: 14px;
+    color: var(--text-mid);
+    font-weight: 500;
+  }
+  .progress-pct {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+  }
+  .progress-pct span {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-light);
+    margin-left: 2px;
+  }
+  .progress-bar-track {
+    width: 100%;
+    height: 10px;
+    background: #E8F0FF;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0066CC, #0088FF);
+    border-radius: 10px;
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+  .step-dots {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+  .step-dots::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 20px; right: 20px;
+    height: 2px;
+    background: var(--border);
+    transform: translateY(-50%);
+    z-index: 0;
+  }
+  .step-dot-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    z-index: 1;
+  }
+  .step-dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #E8F0FF;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .step-dot.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(0,102,204,0.2);
+    transform: scale(1.1);
+  }
+  .step-dot.done {
+    background: var(--success);
+    border-color: var(--success);
+    color: #fff;
+  }
+  .step-dot.done::after {
+    content: '✓';
+    position: absolute;
+    font-size: 14px;
+  }
+  .step-dot.done .dot-num { display: none; }
+  .step-dot-label {
+    font-size: 10px;
+    color: var(--text-light);
+    text-align: center;
+    max-width: 60px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .step-dot-item.active .step-dot-label { color: var(--primary); font-weight: 600; }
+  .step-dot-item.done .step-dot-label { color: var(--success); }
+
+  /* ===== MAIN CONTENT ===== */
+  .main-content {
+    max-width: 860px;
+    margin: 32px auto 60px;
+    padding: 0 16px;
+  }
+
+  /* ===== STEP CARD ===== */
+  .step-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    border: 1.5px solid transparent;
+  }
+  .step-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+  }
+  .step-card.active-card {
+    border-color: var(--primary);
+    box-shadow: 0 4px 24px rgba(0,102,204,0.15);
+  }
+  .step-card.completed-card {
+    border-color: var(--success);
+  }
+
+  .step-header {
+    display: flex;
+    align-items: center;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+    gap: 16px;
+    transition: background 0.2s;
+  }
+  .step-header:hover { background: #FAFCFF; }
+
+  .step-num-badge {
+    width: 48px; height: 48px;
+    min-width: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0,102,204,0.3);
+    transition: all 0.3s ease;
+  }
+  .step-card.completed-card .step-num-badge {
+    background: linear-gradient(135deg, var(--success), #00E676);
+    box-shadow: 0 4px 12px rgba(0,200,83,0.3);
+  }
+  .step-card.completed-card .step-num-badge::after {
+    content: '✓';
+    font-size: 20px;
+  }
+  .step-card.completed-card .step-num-badge .num-text { display: none; }
+
+  .step-title-area {
+    flex: 1;
+  }
+  .step-title-main {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .step-kor {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-light);
+    background: var(--bg);
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .step-subtitle {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 3px;
+  }
+
+  .step-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .step-progress-mini {
+    font-size: 12px;
+    color: var(--text-light);
+    background: var(--bg);
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .step-progress-mini.all-done {
+    background: var(--success-light);
+    color: var(--success);
+    font-weight: 600;
+  }
+  .chevron {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.3s ease, background 0.2s;
+    color: var(--text-light);
+    font-size: 11px;
+  }
+  .step-card.open .chevron {
+    transform: rotate(180deg);
+    background: var(--primary-ultra-light);
+    color: var(--primary);
+  }
+
+  /* ===== STEP BODY ===== */
+  .step-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .step-card.open .step-body {
+    max-height: 2000px;
+  }
+  .step-body-inner {
+    padding: 0 24px 24px;
+  }
+
+  .step-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 20px;
+  }
+
+  /* ===== INFO BOX ===== */
+  .info-box {
+    background: var(--primary-ultra-light);
+    border-left: 4px solid var(--primary);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
+  .info-box.warning {
+    background: var(--warning-light);
+    border-color: var(--warning);
+  }
+  .info-box.success {
+    background: var(--success-light);
+    border-color: var(--success);
+  }
+  .info-box strong {
+    color: var(--primary);
+    font-weight: 600;
+  }
+  .info-box.warning strong { color: var(--warning); }
+  .info-box.success strong { color: var(--success); }
+
+  /* ===== CHECKLIST ===== */
+  .checklist-section {
+    margin-bottom: 20px;
+  }
+  .checklist-section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-mid);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .checklist-section-title::before {
+    content: '';
+    display: inline-block;
+    width: 3px; height: 14px;
+    background: var(--primary);
+    border-radius: 2px;
+  }
+
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border: 1.5px solid transparent;
+  }
+  .checklist-item:hover {
+    background: var(--bg);
+    border-color: var(--border);
+  }
+  .checklist-item.checked {
+    background: var(--success-light);
+    border-color: rgba(0,200,83,0.2);
+  }
+
+  .check-box {
+    width: 22px; height: 22px;
+    min-width: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    margin-top: 1px;
+  }
+  .checklist-item.checked .check-box {
+    background: var(--success);
+    border-color: var(--success);
+    box-shadow: 0 2px 8px rgba(0,200,83,0.3);
+  }
+  .check-tick {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0;
+    transform: scale(0.5) rotate(-15deg);
+    transition: all 0.2s ease;
+  }
+  .checklist-item.checked .check-tick {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+  .check-text {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text-dark);
+    line-height: 1.6;
+    transition: color 0.2s;
+  }
+  .checklist-item.checked .check-text {
+    color: var(--text-light);
+    text-decoration: line-through;
+    text-decoration-color: rgba(0,200,83,0.5);
+  }
+  .check-tag {
+    display: inline-block;
+    background: var(--bg);
+    color: var(--text-light);
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .checklist-item.checked .check-tag {
+    background: rgba(0,200,83,0.1);
+    color: var(--success);
+  }
+
+  /* ===== STEP ACTIONS ===== */
+  .step-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .btn-complete-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 12px rgba(0,102,204,0.25);
+    font-family: inherit;
+  }
+  .btn-complete-step:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0,102,204,0.3);
+  }
+  .btn-complete-step:active { transform: translateY(0); }
+  .btn-complete-step.done-btn {
+    background: linear-gradient(135deg, var(--success), #00E676);
+    box-shadow: 0 3px 12px rgba(0,200,83,0.25);
+  }
+  .btn-reset-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: var(--bg);
+    color: var(--text-mid);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-reset-step:hover { background: #fff; border-color: var(--primary); color: var(--primary); }
+
+  /* ===== LINK BUTTON ===== */
+  .hometax-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    margin-top: 12px;
+    margin-bottom: 20px;
+  }
+  .hometax-link:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+  }
+
+  /* ===== BOTTOM ACTIONS ===== */
+  .bottom-area {
+    max-width: 860px;
+    margin: 0 auto 40px;
+    padding: 0 16px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .btn-reset-all {
+    padding: 10px 20px;
+    background: #fff;
+    color: var(--text-mid);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-reset-all:hover { border-color: var(--warning); color: var(--warning); }
+  .overall-stats {
+    font-size: 14px;
+    color: var(--text-light);
+  }
+  .overall-stats strong { color: var(--primary); }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 30px; right: 24px;
+    background: var(--text-dark);
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 320px;
+  }
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .toast-icon {
+    width: 28px; height: 28px;
+    min-width: 28px;
+    background: var(--success);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  /* ===== CELEBRATION ===== */
+  .celebration-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+  }
+  .celebration-overlay.show { display: flex; }
+  .celebration-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 48px 40px;
+    text-align: center;
+    max-width: 400px;
+    animation: celebPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes celebPop {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .celeb-emoji { font-size: 56px; margin-bottom: 16px; }
+  .celeb-title { font-size: 24px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+  .celeb-sub { font-size: 15px; color: var(--text-mid); margin-bottom: 24px; line-height: 1.6; }
+  .btn-celeb-close {
+    padding: 12px 32px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .btn-celeb-close:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,102,204,0.3); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 640px) {
+    .site-header h1 { font-size: 22px; }
+    .step-dots::before { display: none; }
+    .step-dot-label { display: none; }
+    .progress-inner { padding: 20px; }
+    .step-header { padding: 16px; gap: 12px; }
+    .step-body-inner { padding: 0 16px 20px; }
+    .step-num-badge { width: 40px; height: 40px; min-width: 40px; font-size: 16px; }
+    .step-title-main { font-size: 15px; }
+    .lang-switcher { top: 12px; right: 12px; }
+  }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--primary-light); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <!-- LANGUAGE SWITCHER -->
+  <div class="lang-switcher">
+    <button class="lang-btn active" data-lang="zh" onclick="switchLang('zh')">中文</button>
+    <button class="lang-btn" data-lang="ko" onclick="switchLang('ko')">한국어</button>
+  </div>
+
+  <div class="header-badge"><span class="dot"></span> <span data-i18n="header.badge">2025年 综合所得税申告期</span></div>
+  <h1 data-i18n="header.title">🇰🇷 综合所得税申告引导</h1>
+  <p data-i18n="header.sub1">모두채움 / 단순경비율 신고 · 홈택스 전자신고</p>
+  <div class="header-sub" data-i18n="header.sub2">根据国税厅官方说明书制作 · 适用于简单经费率申告者</div>
+</div>
+
+<!-- PROGRESS OVERVIEW CARD -->
+<div class="progress-card">
+  <div class="progress-inner">
+    <div class="progress-top">
+      <div>
+        <div class="progress-label" data-i18n="progress.label">申告进度</div>
+      </div>
+      <div class="progress-pct" id="pct-display">0<span>%</span></div>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="main-progress-bar"></div>
+    </div>
+    <div class="step-dots" id="step-dots-container">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT: 8 STEP CARDS -->
+<div class="main-content" id="steps-container">
+</div>
+
+<!-- BOTTOM AREA -->
+<div class="bottom-area">
+  <button class="btn-reset-all" onclick="resetAll()">🗘 <span data-i18n="btn.resetAll">重置全部进度</span></button>
+  <div class="overall-stats" id="overall-stats">共 <strong>0</strong> / <strong>0</strong> <span data-i18n="stats.items">项已完成</span></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✓</div>
+  <span id="toast-msg">步骤完成！</span>
+</div>
+
+<!-- CELEBRATION OVERLAY -->
+<div class="celebration-overlay" id="celebration">
+  <div class="celebration-card">
+    <div class="celeb-emoji">🎉</div>
+    <div class="celeb-title" data-i18n="celeb.title">申告完成！</div>
+    <div class="celeb-sub" data-i18n="celeb.sub">恭喜！您已完成全部申告步骤。<br>请记得确认缴税或退税到账情况。<br><br>신고 수고하셨습니다！</div>
+    <button class="btn-celeb-close" onclick="closeCelebration()"><span data-i18n="btn.confirm">确认</span></button>
+  </div>
+</div>
+
+<script>
+// =========================================================
+// TRANSLATIONS
+// =========================================================
+const I18N = {
+  zh: {
+    'header.badge': '2025年 综合所得税申告期',
+    'header.title': '🇰🇷 综合所得税申告引导',
+    'header.sub1': '모두채움 / 단순경비율 신고 · 홈택스 전자신고',
+    'header.sub2': '根据国税厅官方说明书制作 · 适用于简单经费率申告者',
+    'progress.label': '申告进度',
+    'stats.items': '项已完成',
+    'btn.resetAll': '重置全部进度',
+    'btn.confirm': '确认',
+    'celeb.title': '申告完成！',
+    'celeb.sub': '恭喜！您已完成全部申告步骤。<br>请记得确认缴税或退税到账情况。<br><br>신고 수고하셨습니다！',
+    'toast.stepDone': '已全部完成！',
+    'toast.stepMarked': '已标记完成',
+    'toast.resetConfirm': '确定要重置全部申告进度吗？',
+    'toast.allDone': '步骤全部完成！',
+    'step.done': '此步骤已完成',
+    'step.mark': '标记此步骤完成',
+    'step.reset': '重置此步骤',
+    'step.allComplete': '全部完成',
+    'step.complete': '完成此步骤',
+    'hometax.link': '前往 Hometax 申告页面 →',
+    'info.title': '确认申报页面',
+    'warn.skip': '大多数情况',
+    'optional': '如适用',
+    'recommend': '推荐',
+    'required': '必须单独申告',
+  },
+  ko: {
+    'header.badge': '2025년 종합소득세 신고기간',
+    'header.title': '🇰🇷 종합소득세 신고 가이드',
+    'header.sub1': '모두채움 / 단순경비율 신고 · 홈택스 전자신고',
+    'header.sub2': '국세청 공식 안내서를 바탕으로 제작 · 단순경비율 신고자용',
+    'progress.label': '신고 진행률',
+    'stats.items': '항목 완료',
+    'btn.resetAll': '전체 진행 초기화',
+    'btn.confirm': '확인',
+    'celeb.title': '신고 완료！',
+    'celeb.sub': '축하합니다！모든 신고 절차를 완료하셨습니다.<br>납부 또는 환급 금액을 확인하세요.<br><br>신고 수고하셨습니다！',
+    'toast.stepDone': '모두 완료！',
+    'toast.stepMarked': '완료로 표시됨',
+    'toast.resetConfirm': '모든 신고 진행률을 초기화하시겠습니까?',
+    'toast.allDone': '모든 단계 완료！',
+    'step.done': '단계 완료',
+    'step.mark': '이 단계 완료로 표시',
+    'step.reset': '이 단계 초기화',
+    'step.allComplete': '전체 완료',
+    'step.complete': '단계 완료하기',
+    'hometax.link': '홈택스 신고 페이지로 이동 →',
+    'info.title': '신고 페이지 확인',
+    'warn.skip': '대부분의 경우',
+    'optional': '해당 시 적용',
+    'recommend': '권장',
+    'required': '별도로 신고 필요',
+  }
+};
+
+// =========================================================
+// DATA: 8 STEPS WITH CHECKLISTS (BILINGUAL)
+// =========================================================
+const STEPS_DATA = [
+  {
+    id: 1,
+    icon: "🔐",
+    title: { zh: "登录 Hometax", ko: "홈택스 로그인" },
+    kor: "로그인",
+    subtitle: { zh: "访问韩国国税厅홈택스，选择认证方式登录", ko: "국세청 홈택스에 접속하여 인증 진행 후 로그인" },
+    info: {
+      type: "info",
+      content: {
+        zh: "<strong>申告入口：</strong>在Hometax首页点击「종합소득세 신고 서비스」图标，点击后系统会弹出适合您申告类型的定制弹窗。",
+        ko: "<strong>신고 경로：</strong>홈택스 홈페이지에서「종합소득세 신고 서비스」아이콘을 클릭하면 신고유형에 맞는 창이 나타납니다."
+      }
+    },
+    sections: [  
+    {
+        title: { zh: "访问申告页面", ko: "신고 페이지 접속" },
+        items: [
+          { id: "s1_1", text: { zh: "打开韩国国税厅 Hometax 网站", ko: "국세청 홈택스 웹사이트 접속" }, tag: "www.hometax.go.kr" },
+          { id: "s1_2", text: { zh: "在首页找到「종합소득세 신고 서비스」按钮并点击", ko: "홈페이지에서「종합소득세 신고 서비스」버튼을 찾아 클릭" } },
+          { id: "s1_3", text: { zh: "若无法看到弹窗，点击顶部菜单「세금신고」→「종합소득세 신고」→「모두채움 신고/단순경비율 신고」", ko: "팝업이 안 보이면 상단 메뉴「세금신고」→「종합소득세 신고」→「모두채움 신고/단순경비율 신고」클릭" } },
+        ]
+      },
+      {
+        title: { zh: "选择认证方式登录", ko: "인증方式 선택 및 로그인" },
+        items: [
+          { id: "s1_4", text: { zh: "推荐：使用「공동·금융인증서」（公共/金融认证书）登录", ko: "권장：「공동·금융인증서」(공동/금융인증서)로 로그인" }, tag: { zh: "推荐", ko: "권장" } },
+          { id: "s1_5", text: { zh: "或选择「간편인증」（简便认证）、「모바일신분증」（手机身份证）、「생체인증」（生物认证）", ko: "또는「간편인증」 「모바일신분증」 「생체인증」에 선택" } },
+          { id: "s1_6", text: { zh: "若只用ID登录，系统会弹出「종합소득세 추가인증」追加认证弹窗，需通过手机或信用卡认证", ko: "ID만으로 로그인 시「종합소득세 추가인증」창이 나타나며 핸드폰 또는 신용카드로 추가인증 필요" } },
+          { id: "s1_7", text: { zh: "认证成功后确认系统已加载个人所得数据（自动填充功能激活）", ko: "인증 성공 후 개인 소득데이터가 로드되었는지 확인（자동 입력 기능 활성화）" } },
+        ]
+      },
+      {
+        title: { zh: "确认申告类型弹窗", ko: "신고유형 팝업 확인" },
+        items: [
+          { id: "s1_8", text: { zh: "登录后确认定制化弹窗出现，显示您对应的申告类型", ko: "로그인 후 신고유형에 맞는 팝업이 나타나는지 확인" } },
+          { id: "s1_9", text: { zh: "阅读弹窗内容，点击进入申告填写页面", ko: "팝업 내용을 확인하고 신고 작성 페이지로 진입" } },
+        ]
+      }
+    ],
+    link: { text: { zh: "前往 Hometax 申告页面 →", ko: "홈택스 신고 페이지로 이동 →" }, url: "https://www.hometax.go.kr" }
+
+  },
+  {
+    id: 2,
+    icon: "👤",
+    title: { zh: "填写基本信息", ko: "기본사항 작성" },
+    kor: "기본사항 작성",
+    subtitle: { zh: "确认纳税人基本信息并录入联系方式", ko: "납세자 기본정보 확인 및 연락처 입력" },
+    info: {
+      type: "info",
+      content: {
+        zh: "<strong>提示：</strong>点击「확인」按钮可自动调取纳税人基本信息。请仔细确认居住区分、内外国人区分是否正确。",
+        ko: "<strong>안내：</strong>「확인」버튼을 클릭하면 납세자 기본정보가 자동入力됩니다. 거주구분, 내·외국인 구분이 정확한지 확인하세요."
+      }
+    },
+    sections: [
+      {
+        title: { zh: "确认基本信息", ko: "기본정보 확인" },
+        items: [
+          { id: "s2_1", text: { zh: "在「주민등록번호」（居民注册号码）栏点击「확인」按钮，自动调取纳税人信息", ko: "「주민등록번호」항목에서「확인」버튼을 클릭하여 납세자 정보 자동 입력" } },
+          { id: "s2_2", text: { zh: "核对姓名、居民注册号码是否正确", ko: "성명, 주민등록번호가 정확한지 확인" } },
+        ]
+      },
+      {
+        title: { zh: "填写联系方式", ko: "연락처 입력" },
+        items: [
+          { id: "s2_3", text: { zh: "在联系方式栏选择「휴대전화」（手机）/ 「주소지 전화」（家庭电话）/ 「사업장 전화」（单位电话）之一", ko: "연락처 항목에서「휴대전화」/「주소지 전화」/「사업장 전화」중 하나 선택" } },
+          { id: "s2_4", text: { zh: "填写所选联系方式的电话号码", ko: "선택한 연락처의 전화번호를 입력" } },
+        ]
+      },
+      {
+        title: { zh: "确认区分信息", ko: "구분정보 확인" },
+        items: [
+          { id: "s2_5", text: { zh: "确认「거주구분」（居住区分）：居住者 / 非居住者", ko: "「거주구분」확인：거주자 / 비거주자" } },
+          { id: "s2_6", text: { zh: "确认「내·외국인 구분」（内外国人区分），如需修改请更正", ko: "「내·외국인 구분」확인, 수정이 필요하면 수정" } },
+          { id: "s2_7", text: { zh: "所有信息确认无误后，点击「작성완료」按钮进入下一步", ko: "모든 정보 확인 후「작성완료」버튼을 클릭하여 다음 단계로 이동" } },
+        ]
+      }
+    ]
+  },
+  {
+    id: 3,
+    icon: "💰",
+    title: { zh: "填写综合所得金额", ko: "종합소득금액 입력" },
+    kor: "종합소득금액",
+    subtitle: { zh: "录入事业所得、劳动所得、年金所得等各类所得", ko: "사업소득, 근로소득, 연금소득 등 각 소득 입력" },
+    info: {
+      type: "info",
+      content: {
+        zh: "<strong>注意：</strong>进入后会弹出「나의 소득종류 찾기」（我的所得类型查询）弹窗，请勾选您所有的所得类型，点击「선택완료」后分别填写。",
+        ko: "<strong>주의：</strong>진입하면「나의 소득종류 찾기」팝업이 나타납니다. 해당하는 모든 소득유형을 선택하고「선택완료」를 클릭한 후 순서대로 입력하세요."
+      }
+    },
+    sections: [
+      {
+        title: { zh: "选择所得类型", ko: "소득유형 선택" },
+        items: [
+          { id: "s3_1", text: { zh: "在「나의 소득종류 찾기」弹窗中，勾选本年度所有所得类型", ko: "「나의 소득종류 찾기」팝업에서 해당 연도의 모든 소득유형 선택" } },
+          { id: "s3_2", text: { zh: "确认所得类型选择无误后点击「선택완료」", ko: "소득유형 선택이 완료되면「선택완료」클릭" } },
+        ]
+      },
+      {
+        title: { zh: "事业所得填写（사업소득）", ko: "사업소득 입력（사업소득）" },
+        items: [
+          { id: "s3_3", text: { zh: "点击「사업소득지급명세 불러오기」导入支付明细书（원천징수의무자가 제출한 명세）", ko: "「사업소득지급명세 불러오기」클릭하여 지급명세서 가져오기" } },
+          { id: "s3_4", text: { zh: "在弹窗中选择要申告的事业所得，点击「선택완료」→「적용하기」", ko: "팝업에서 신고할 사업소득 선택 후「선택완료」→「적용하기」" } },
+          { id: "s3_5", text: { zh: "若有需手动追加的事业所得，点击右上角「사업소득 추가」按钮", ko: "수동으로 추가할 사업소득이 있으면 우측 상단「사업소득 추가」버튼 클릭" } },
+          { id: "s3_6", text: { zh: "有사업자번호：选择「있음」，输入登记号后点击确认；无사업자번호：选择「없음」", ko: "사업자번호 있음：「있음」선택 후 등록번호 입력 확인 / 없음：「없음」선택" } },
+          { id: "s3_7", text: { zh: "不知道업종코드（业种代码）？点击「업종코드-검색」查找并点击「선택완료」自动填入", ko: "업종코드(업종코드)를 모르면「업종코드-검색」을 클릭하여 검색하고「선택완료」클릭" } },
+          { id: "s3_8", text: { zh: "在업종별 총수입금액 팝업中回答设施所有权等「예/아니오」问答", ko: "업종별 총수입금액 팝업에서 시설소유 등「예/아니오」문답에 응답" } },
+          { id: "s3_9", text: { zh: "在总收入金额栏输入금액（金额），系统自动计算필요경비（必要经费）和소득금액（所得金额）", ko: "총수입금액 항목에 금액을 입력하면 시스템이 필요경비와 소득금액을 자동 계산" } },
+          { id: "s3_10", text: { zh: "确认计算结果后点击「입력완료」，再点击「저장하기」", ko: "계산 결과를 확인 후「입력완료」클릭하고「저장하기」" } },
+        ]
+      },
+      {
+        title: { zh: "劳动所得填写（근로소득）", ko: "근로소득 입력（근로소득）" },
+        items: [
+          { id: "s3_11", text: { zh: "若仅有事业所得（无劳动所得），直接跳过此部分，点击「작성완료」", ko: "사업소득만 있고 근로소득이 없으면 이 단계를 건너뛰고「작성완료」클릭" } },
+          { id: "s3_12", text: { zh: "点击「근로소득지급명세서 불러오기」导入劳动所得支付明细书", ko: "「근로소득지급명세서 불러오기」클릭하여 근로소득 지급명세서 가져오기" } },
+          { id: "s3_13", text: { zh: "无法导入时：点击「추가입력」，在弹窗填入소득구분、사업자등록번호、총급여액、원천징수세액", ko: "가져오기 실패 시「추가입력」클릭하여 소득구분, 사업자등록번호, 총급여액, 원천징수세액 입력" } },
+          { id: "s3_14", text: { zh: "点击「저장하기」保存劳动所得数据", ko: "「저장하기」클릭하여 근로소득 데이터 저장" } },
+        ]
+      },
+      {
+        title: { zh: "其他所得填写（기타·연금소득）", ko: "기타·연금소득 입력（기타·연금소득）" },
+        items: [
+          { id: "s3_15", text: { zh: "如有「기타소득」（其他所得）或「연금소득」（年金所得），用相同方法录入", ko: "「기타소득」또는「연금소득」이 있으면 동일한 방식으로 입력" } },
+          { id: "s3_16", text: { zh: "注意：各项所得不要重复录入！", ko: "주의：각 소득을 중복 입력하지 않도록 주의！" } },
+          { id: "s3_17", text: { zh: "全部所得录入完成后，点击「작성완료」进入下一步", ko: "모든 소득 입력이 완료되면「작성완료」클릭하여 다음 단계로 이동" } },
+        ]
+      }
+    ]
+  },
+  {
+    id: 4,
+    icon: "📋",
+    title: { zh: "填写所得扣除金额", ko: "소득공제금액 입력" },
+    kor: "소득공제금액",
+    subtitle: { zh: "录入人员扣除、保险费、住宅资金、信用卡使用额等", ko: "인적공제, 보험료, 주택자금, 신용카드 사용액 등 입력" },
+    info: {
+      type: "info",
+      content: {
+        zh: "<strong>便捷提示：</strong>系统会弹出从支付明细书导入扣除明细的弹窗，点击「적용하기」可自动填入各扣除项目。若关闭了弹窗，也可点击右上角「연말정산(공제)불러오기」重新导入。",
+        ko: "<strong>편의 안내：</strong>지급명세서에서 공제명세를 가져오는 팝업이 나타납니다.「적용하기」를 클릭하면 각 공제항목이 자동 입력됩니다. 팝업을 닫은 경우에도 우측 상단「연말정산(공제)불러오기」를 클릭하여 다시 가져올 수 있습니다."
+      }
+    },
+    sections: [
+      {
+        title: { zh: "人员扣除（인적공제）", ko: "인적공제（인적공제）" },
+        items: [
+          { id: "s4_1", text: { zh: "在「인적공제명세」页面，确认已自动填入的인적공제（人员扣除）信息", ko: "「인적공제명세」페이지에서 자동 입력된 인적공제 정보 확인" } },
+          { id: "s4_2", text: { zh: "如需添加扶养家属，点击「인적공제추가」按钮", ko: "부양가족을 추가하려면「인적공제추가」버튼 클릭" } },
+          { id: "s4_3", text: { zh: "可点击「전년도 인적공제 불러오기」导入上一年度扶养家属信息", ko: "「전년도 인적공제 불러오기」클릭하여 전년도 부양가족 정보 가져올 수 있음" } },
+          { id: "s4_4", text: { zh: "添加新的扶养家属：输入주민등록번호（居民注册号）→ 点击「확인」→ 选择关系及追加扣除项目", ko: "새 부양가족 추가：주민등록번호 입력 →「확인」→ 관계 및 추가공제 항목 선택" } },
+          { id: "s4_5", text: { zh: "在「문답내용 적용하기」中确认选择内容后，点击「입력완료」→「등록하기」", ko: "「문답내용 적용하기」에서 선택 내용 확인 후「입력완료」→「등록하기」" } },
+        ]
+      },
+      {
+        title: { zh: "保险费 · 住宅资金扣除", ko: "보험료 · 주택자금공제" },
+        items: [
+          { id: "s4_6", text: { zh: "在소득공제금액 명세页面，检查各项是否已自动填入", ko: "소득공제금액 명세 페이지에서 각 항목이 자동 입력되었는지 확인" } },
+          { id: "s4_7", text: { zh: "点击各项目的「펼치기」查看详细内容", ko: "각 항목의「펼치기」를 클릭하여 상세 내용 확인" } },
+          { id: "s4_8", text: { zh: "保险费（보험료）：点击「불러오기」导入년말정산 간소화자료 或直接输入", ko: "보험료(보험료)：「불러오기」클릭하여 연말정산 간소화자료 가져오기 또는 직접 입력" } },
+          { id: "s4_9", text: { zh: "住宅资金扣除（주택자금공제）：点击「불러오기」导入或直接输入", ko: "주택자금공제(주택자금공제)：「불러오기」클릭하여 가져오기 또는 직접 입력" } },
+          { id: "s4_10", text: { zh: "住宅储蓄所得扣除（주택마련저축소득공제）：导入或直接输入", ko: "주택마련저축소득공제：가져오기 또는 직접 입력" } },
+        ]
+      },
+      {
+        title: { zh: "信用卡使用额扣除", ko: "신용카드 등 사용액 공제" },
+        items: [
+          { id: "s4_11", text: { zh: "신용카드 등 사용액（信用卡等使用额）：点击「불러오기」/「계산하기」导入간소화자료", ko: "신용카드 등 사용액(신용카드 등 사용액)：「불러오기」/「계산하기」클릭하여 간소화자료 가져오기" } },
+          { id: "s4_12", text: { zh: "确认扣除合计及超限金额后，点击「작성완료」进入下一步", ko: "공제 합계 및 초과금액 확인 후「작성완료」클릭하여 다음 단계로 이동" } },
+        ]
+      }
+    ]
+  },
+  {
+    id: 5,
+    icon: "🏷️",
+    title: { zh: "填写税额扣除·减免金额", ko: "세액공제·감면금액 입력" },
+    kor: "세액공제·감면금액",
+    subtitle: { zh: "子女税额扣除、年金账户、捐款、保险·医疗·教育、月租等", ko: "자녀세액공제, 연금계좌, 기부금, 보험·의료·교육, 월세 등" },
+    info: {
+      type: "info",
+      content: {
+        zh: "<strong>2025年新增：</strong>혼인세액공제（结婚税额扣除）已于2024年归属年度起新设。2025年登记结婚者可直接输入50万韩元。各项目可点击「도움말」确认扣除要件。",
+        ko: "<strong>2025년 신설：</strong>혼인세액공제(혼인세액공제)는 2024년 귀속연도부터 신설되었습니다. 2025년 혼인 신고자는 50만 원을 입력할 수 있습니다. 각 항목은「도움말」을 클릭하여 공제 요건을 확인하세요."
+      }
+    },
+    sections: [
+      {
+        title: { zh: "基础税额扣除（自动输入项目）", ko: "기본 세액공제（자동 입력 항목）" },
+        items: [
+          { id: "s5_1", text: { zh: "자녀세액공제（子女税额扣除）：根据前面录入的인적공제明细自动填入，确认金额", ko: "자녀세액공제(자녀세액공제)：앞에서 입력한 인적공제 명세에 따라 자동 입력되므로 금액 확인" } },
+          { id: "s5_2", text: { zh: "혼인세액공제（结婚税额扣除）：2025年结婚者填入50万韩元 (500,000원)", ko: "혼인세액공제(혼인세액공제)：2025년 혼인 신고자는 50만 원(500,000원) 입력" } },
+        ]
+      },
+      {
+        title: { zh: "年金账户税额扣除（연금계좌세액공제）", ko: "연금계좌 세액공제（연금계좌세액공제）" },
+        items: [
+          { id: "s5_3", text: { zh: "点击「불러오기」，在弹窗中导入년말정산 간소화자료 或直接输入年金账户缴纳金额", ko: "「불러오기」클릭하여 팝업에서 연말정산 간소화자료 가져오기 또는 직접 연금계좌 납입금액 입력" } },
+          { id: "s5_4", text: { zh: "点击「계산하기」确认金额，再点击「적용하기」应用", ko: "「계산하기」클릭하여 금액 확인 후「적용하기」클릭" } },
+        ]
+      },
+      {
+        title: { zh: "捐款税额扣除（기부금 세액공제）", ko: "기부금 세액공제（기부금 세액공제）" },
+        items: [
+          { id: "s5_5", text: { zh: "如有捐款，点击세액공제 页面上方「기부금」按钮", ko: "기부금이 있으면 세액공제 페이지 상단의「기부금」버튼 클릭" } },
+          { id: "s5_6", text: { zh: "确认已提交的捐款明细书（已自动显示）", ko: "제출한 기부금명세서가 있는지 확인（자동 표시됨）" } },
+          { id: "s5_7", text: { zh: "若无提交记录但有2025年捐款支出，点击「기부금명세서 입력/수정」手动录入", ko: "제출 기록이 없지만 2025년 기부금 지출이 있으면「기부금명세서 입력/수정」클릭하여 수동 입력" } },
+          { id: "s5_8", text: { zh: "填写：捐款者信息、捐款机构、기부금코드（捐款代码）等，点击「입력완료」", ko: "기부자 정보, 기부 기관, 기부금코드 등 입력 후「입력완료」" } },
+          { id: "s5_9", text: { zh: "上年度结转捐款：点击「전년도 기부금조정명세 불러오기」或「기부금 조정명세 추가」", ko: "전년도 이월 기부금：「전년도 기부금조정명세 불러오기」또는「기부금 조정명세 추가」" } },
+          { id: "s5_10", text: { zh: "确认「기부금유형별 한도액 및 공제대상금액 현황」，点击「입력완료」", ko: "「기부금유형별 한도액 및 공제대상금액 현황」확인 후「입력완료」" } },
+        ]
+      },
+      {
+        title: { zh: "保险·医疗·教育·月租税额扣除", ko: "보험·의료·교육·월세 세액공제" },
+        items: [
+          { id: "s5_11", text: { zh: "一般보장성 보험료（保障性保险费）：点击「불러오기」导入간소화자료，选择月份后点击「불러오기」→「계산하기」→「적용하기」", ko: "일반보장성 보험료(일반보장성 보험료)：「불러오기」클릭하여 간소화자료 가져오기, 월 선택 후「불러오기」→「계산하기」→「적용하기」" } },
+          { id: "s5_12", text: { zh: "의료비（医疗费）：同上，导入后可直接修改金额，「계산하기」→「적용하기」", ko: "의료비(의료비)：동일하게 가져온 후 금액 직접 수정 가능「계산하기」→「적용하기」" } },
+          { id: "s5_13", text: { zh: "교육비（教育费）：导入간소화자료；간소화자료中没有的，点击「교육비 직접입력」手动填写", ko: "교육비(교육비)：간소화자료 가져오기；간소화자료에 없으면「교육비 직접입력」클릭하여 수동 입력" } },
+          { id: "s5_14", text: { zh: "월세액 세액공제（月租税额扣除）：符合要件者，填入当年支付的月租总金额，系统自动计算", ko: "월세액 세액공제(월세액 세액공제)：요건에 해당하면 해당 연도 월세 총금액 입력하면 시스템이 자동 계산" } },
+          { id: "s5_15", text: { zh: "确认各项扣除：보장성보험료 / 의료비 / 교육비 / 월세액 超限时系统自动调整", ko: "각 공제항목 확인：보장성보험료 / 의료비 / 교육비 / 월세액 한도에 초과시 시스템이 자동 조정함" } },
+        ]
+      },
+      {
+        title: { zh: "税额减免（세액감면）", ko: "세액감면（세액감면）" },
+        items: [
+          { id: "s5_16", text: { zh: "若有适用的세액감면（税额减免）项目，直接输入减免金额", ko: "해당되는 세액감면(세액감면) 항목이 있으면 감면 금액을 직접 입력" } },
+          { id: "s5_17", text: { zh: "点击「도움말」确认减免要件", ko: "「도움말」클릭하여 감면 요건 확인" } },
+          { id: "s5_18", text: { zh: "所有세액공제 및 세액감면 填写完成后，点击「작성완료」进入下一步", ko: "모든 세액공제 및 세액감면 입력이 완료되면「작성완료」클릭하여 다음 단계로 이동" } },
+        ]
+      }
+    ]
+  },
+  {
+    id: 6,
+    icon: "⚠️",
+    title: { zh: "加算税（如适用）", ko: "가산세（해당 시）" },
+    kor: "가산세",
+    subtitle: { zh: "确认是否需要填写加算税，如无直接跳过", ko: "가산세 입력 필요 여부 확인, 없으면 건너뛰기" },
+    info: {
+      type: "warning",
+      content: {
+        zh: "<strong>注意：</strong>进入가산세页面后会弹出提示弹窗。若<strong>不适用加算税</strong>（大多数情况），直接点击「예」跳过即可。只有存在申告不足、纳税迟延等情况时才需填写。",
+        ko: "<strong>주의：</strong>가산세 페이지에 진입하면 알림 팝업이 나타납니다. <strong>가산세 미해당</strong>(대부분의 경우)이라면「예」를 클릭하여 건너뛰세요. 신고불성실, 납부지연 등이 있는 경우에만 입력 필요합니다."
+      }
+    },
+    sections: [
+      {
+        title: { zh: "判断是否适用加算税", ko: "가산세 해당 여부 판단" },
+        items: [
+          { id: "s6_1", text: { zh: "进入가산세 입력화면，看到「알림」弹窗", ko: "가산세 입력화면에 진입하여「알림」팝업 확인" } },
+          { id: "s6_2", text: { zh: "【不适用加算税】：点击「예」直接跳至下一步（기납부세액）", ko: "가산세 미해당：「예」클릭하여 다음 단계(기납부세액)로 이동" }, tag: { zh: "大多数情况", ko: "대부분의 경우" } },
+          { id: "s6_3", text: { zh: "【需要填写加算税】：点击「아니오」，进入加算税详细填写页面", ko: "가산세 입력 필요：「아니오」클릭하여 가산세 상세 입력 페이지로 이동" } },
+        ]
+      },
+      {
+        title: { zh: "加算税填写（如需要）", ko: "가산세 입력（해당 시）" },
+        items: [
+          { id: "s6_4", text: { zh: "各项目点击「계산기」按钮，输入相关金额后点击「입력완료」", ko: "각 항목에서「계산기」버튼 클릭하여 관련 금액 입력 후「입력완료」" }, tag: { zh: "如适用", ko: "해당 시" } },
+          { id: "s6_5", text: { zh: "所有가산세 填写完成后，点击「작성완료」进入기납부세액页面", ko: "모든 가산세 입력이 완료되면「작성완료」클릭하여 기납부세액 페이지로 이동" } },
+        ]
+      }
+    ]
+  },
+  {
+    id: 7,
+    icon: "🧾",
+    title: { zh: "确认已缴纳税额", ko: "기납부세액 확인" },
+    kor: "기납부세액",
+    subtitle: { zh: "确认中间预纳税额、源泉征收税额等已缴税额", ko: "중간예납세액, 원천징수세액 등 납부세액 확인" },
+    info: {
+      type: "info",
+      content: {
+        zh: "<strong>说明：</strong>此页面会自动显示总决定税额、中间预纳税额、源泉征收税额等，并自动计算「납부할 세액」（应缴税额）或「환급받을 세액」（退税金额）。",
+        ko: "<strong>설명：</strong>이 페이지에서는 총결정세액, 중간예납세액, 원천징수세액 등이 자동 표시되며「납부할 세액」(납부세액) 또는「환급받을 세액」(환급금액)을 자동 계산합니다."
+      }
+    },
+    sections: [
+      {
+        title: { zh: "确认各项税额", ko: "각 세액 항목 확인" },
+        items: [
+          { id: "s7_1", text: { zh: "确认总결정세액（决定税额）金额是否正确", ko: "총결정세액(결정세액) 금액이 정확한지 확인" } },
+          { id: "s7_2", text: { zh: "중간예납세액（中间预纳税额）：点击「불러오기」导入，或直接修改输入", ko: "중간예납세액(중간예납세액)：「불러오기」클릭하여 가져오기 또는 직접 수정 입력" } },
+          { id: "s7_3", text: { zh: "원천징수세액（源泉征收税额）：点击「작성하기」按钮进入详细填写", ko: "원천징수세액(원천징수세액)：「작성하기」버튼 클릭하여 상세 입력으로 이동" } },
+        ]
+      },
+      {
+        title: { zh: "确认源泉征收税额", ko: "원천징수세액 확인" },
+        items: [
+          { id: "s7_4", text: { zh: "在弹窗右上角点击「사업소득 원천징수세액 가져오기」导入源泉征收明细", ko: "팝업 우측 상단의「사업소득 원천징수세액 가져오기」클릭하여 원천징수 명세 가져오기" } },
+          { id: "s7_5", text: { zh: "选择要导入的明细后，点击「입력하기」", ko: "가져올 명세를 선택 후「입력하기」" } },
+          { id: "s7_6", text: { zh: "若没有显示相关明细，手动输入원천징수의무자 사업자등록번호 和 원천징수소득세 금액，点击「입력하기」", ko: "관련 명세가 표시되지 않으면 원천징수의무자 사업자등록번호 및 원천징수소득세 금액을 수동 입력 후「입력하기」" } },
+          { id: "s7_7", text: { zh: "确认입력한 사항 与 원천징수 및 납세조합징수세액 소득세 합계금액 是否一致", ko: "입력한 사항과 원천징수 및 납세조합징수세액 소득세 합계금액이 일치하는지 확인" } },
+          { id: "s7_8", text: { zh: "确认无误后点击「입력완료」", ko: "확인 후「입력완료」클릭" } },
+        ]
+      }
+    ]
+  },
+  {
+    id: 8,
+    icon: "✅",
+    title: { zh: "确认缴税/退税并提交", ko: "납부/환급 확인 및 제출" },
+    kor: "납부(환급) 할 세액 · 신고서 제출",
+    subtitle: { zh: "最终确认应缴税额或退税金额，同意声明并提交申告书", ko: "최종 납부세액 또는 환급금액 확인, 동의 후 신고서 제출" },
+    info: {
+      type: "success",
+      content: {
+        zh: "<strong>最后一步！</strong>请仔细检查申告内容，确认无误后提交。提交后别忘记同步申告개인지방소득세（个人地方所得税）。",
+        ko: "<strong>마지막 단계！</strong>신고 내용을 면밀히 확인한 후 오류가 없으면 제출하세요. 제출 후 개인지방소득세(개인지방소득세) 신고도 진행하세요."
+      }
+    },
+    sections: [
+      {
+        title: { zh: "确认应缴/退税金额", ko: "납부/환급 금액 확인" },
+        items: [
+          { id: "s8_1", text: { zh: "确认납부할 세액（应缴税额）或 환급받을 세액（退税金额）金额", ko: "납부할 세액(납부할 세액) 또는 환급받을 세액(환급받을 세액) 금액 확인" } },
+          { id: "s8_2", text: { zh: "如有退税：在「나의 환급계좌」栏输入银行名称和账号，点击「계좌검증」验证账号", ko: "환급 대상인 경우：「나의 환급계좌」항목에 은행명 및 계좌번호 입력 후「계좌검증」클릭" } },
+          { id: "s8_3", text: { zh: "确认无误后点击「작성완료」进入最终提交页面", ko: "확인 후「작성완료」클릭하여 최종 제출 페이지로 이동" } },
+        ]
+      },
+      {
+        title: { zh: "提交申告书", ko: "신고서 제출" },
+        items: [
+          { id: "s8_4", text: { zh: "仔细检查申告内容是否如实填写", ko: "신고 내용이 사실대로 입력되었는지 면밀히 확인" } },
+          { id: "s8_5", text: { zh: "勾选「이에 동의합니다」（本人同意此内容）", ko: "「이에 동의합니다」(동의함) 체크" } },
+          { id: "s8_6", text: { zh: "选择「개인정보 지방자치단체(위택스) 통보 제공동의」（提供个人信息给地方政府/Wetax）— 推荐同意，方便申告地方所得税", ko: "「개인정보 지방자치단체(위택스) 통보 제공동의」(지방자치단체에 개인정보 제공 동의) 선택 — 동의 권장,지방소득세 신고에 편의" }, tag: { zh: "推荐同意", ko: "동의 권장" } },
+          { id: "s8_7", text: { zh: "点击「신고서 제출하기」提交申告书", ko: "「신고서 제출하기」클릭하여 신고서 제출" } },
+        ]
+      },
+      {
+        title: { zh: "缴税及地方所得税", ko: "납부 및 지방소득세" },
+        items: [
+          { id: "s8_8", text: { zh: "若有应缴税额：点击「바로 납부하기」立即缴税，或通过QR码、打印缴税单、虚拟账号等方式缴税", ko: "납부할 세액이 있으면「바로 납부하기」클릭하여 즉시 납부하거나 QR코드, 납부서 출력, 가상계좌 등 방식으로 납부" } },
+          { id: "s8_9", text: { zh: "点击「신고내역 확인하기」可查看已提交的申告书和缴税单", ko: "「신고내역 확인하기」클릭하여 제출한 신고서 및 납부서 확인 가능" } },
+          { id: "s8_10", text: { zh: "点击「지방세소득세 이동」按钮，前往申告개인지방소득세（个人地方所得税）", ko: "「지방세소득세 이동」버튼 클릭하여 개인지방소득세(개인지방소득세) 신고 페이지로 이동" }, tag: { zh: "必须单独申告", ko: "별도로 신고 필요" } },
+          { id: "s8_11", text: { zh: "在위택스（Wetax）或 스마트위택스（移动端）完成地方所得税申告", ko: "위택스(Wetax) 또는 스마트위택스(모바일)에서 지방소득세 신고 완료" } },
+        ]
+      }
+    ]
+  }
+];
+
+// =========================================================
+// STATE
+// =========================================================
+const STORAGE_KEY = 'tax_filing_checklist_v2';
+let checkedItems = {};
+let currentLang = 'zh';
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const data = JSON.parse(saved);
+      checkedItems = data.items || {};
+      currentLang = data.lang || 'zh';
+    }
+  } catch(e) { checkedItems = {}; currentLang = 'zh'; }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ items: checkedItems, lang: currentLang }));
+}
+
+// =========================================================
+// LANGUAGE SWITCHING
+// =========================================================
+function switchLang(lang) {
+  currentLang = lang;
+  document.body.classList.toggle('ko', lang === 'ko');
+  document.documentElement.lang = lang === 'ko' ? 'ko-KR' : 'zh-CN';
+  
+  // Update lang buttons
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  
+  // Update all i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (I18N[lang][key]) el.innerHTML = I18N[lang][key];
+  });
+  
+  saveState();
+  renderAll();
+}
+
+function t(key) {
+  return I18N[currentLang][key] || key;
+}
+
+// =========================================================
+// RENDER
+// =========================================================
+function renderAll() {
+  renderStepDots();
+  renderStepCards();
+  updateProgress();
+}
+
+function getText(obj) {
+  if (typeof obj === 'string') return obj;
+  return obj[currentLang] || obj.zh || '';
+}
+
+function getTagText(item) {
+  if (!item.tag) return '';
+  const tag = getText(item.tag);
+  return `<span class="check-tag">${tag}</span>`;
+}
+
+function renderStepDots() {
+  const container = document.getElementById('step-dots-container');
+  const shortLabels = {
+    1: { zh: '登录', ko: '로그인' },
+    2: { zh: '基本信息', ko: '기본사항' },
+    3: { zh: '综合所得', ko: '종합소득' },
+    4: { zh: '所得扣除', ko: '소득공제' },
+    5: { zh: '税额扣除', ko: '세액공제' },
+    6: { zh: '加算税', ko: '가산세' },
+    7: { zh: '已缴纳税', ko: '기납부' },
+    8: { zh: '缴税/退税', ko: '납부/환급' },
+  };
+  container.innerHTML = STEPS_DATA.map(step => {
+    const { total, done } = getStepProgress(step);
+    const isDone = total > 0 && done === total;
+    const isActive = getActiveStep() === step.id;
+    return `
+      <div class="step-dot-item ${isDone?'done':''} ${isActive?'active':''}" onclick="scrollToStep(${step.id})">
+        <div class="step-dot ${isDone?'done':''} ${isActive?'active':''}">
+          <span class="dot-num">${step.id}</span>
+        </div>
+        <div class="step-dot-label">${shortLabels[step.id][currentLang]}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function getActiveStep() {
+  for(const step of STEPS_DATA) {
+    const { total, done } = getStepProgress(step);
+    if(done < total) return step.id;
+  }
+  return STEPS_DATA[STEPS_DATA.length-1].id;
+}
+
+function renderStepCards() {
+  const container = document.getElementById('steps-container');
+  container.innerHTML = STEPS_DATA.map(step => renderStepCard(step)).join('');
+}
+
+function renderStepCard(step) {
+  const { total, done } = getStepProgress(step);
+  const isDone = total > 0 && done === total;
+  const isActive = getActiveStep() === step.id;
+  const isOpen = isActive || isDone;
+
+  const infoHtml = step.info ? `
+    <div class="info-box ${step.info.type}">
+      ${getText(step.info.content)}
+    </div>
+  ` : '';
+
+  const sectionsHtml = step.sections.map(sec => `
+    <div class="checklist-section">
+      <div class="checklist-section-title">${getText(sec.title)}</div>
+      ${sec.items.map(item => renderCheckItem(item)).join('')}
+    </div>
+  `).join('');
+
+  const linkHtml = step.link ? `
+  <a href="${step.link.url}" target="_blank" class="hometax-link">
+    <img src="https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://hometax.go.kr/&size=16" 
+         width="16" height="16" 
+         style="border-radius: 3px; vertical-align: middle;">
+    ${getText(step.link.text)}
+  </a>
+  ` : '';
+
+  const progressText = isDone
+    ? `<span class="step-progress-mini all-done">✓ ${t('step.allComplete')}</span>`
+    : `<span class="step-progress-mini">${done}/${total}</span>`;
+
+  return `
+    <div class="step-card ${isDone?'completed-card':''} ${isActive?'active-card':''} ${isOpen?'open':''}" id="step-card-${step.id}">
+      <div class="step-header" onclick="toggleStep(${step.id})">
+        <div class="step-num-badge">
+          <span class="num-text">${step.id}</span>
+        </div>
+        <div class="step-title-area">
+          <div class="step-title-main">
+            ${step.icon} ${getText(step.title)}
+            <span class="step-kor">${step.kor}</span>
+          </div>
+          <div class="step-subtitle">${getText(step.subtitle)}</div>
+        </div>
+        <div class="step-right">
+          ${progressText}
+          <div class="chevron">▼</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="step-body-inner">
+          <div class="step-divider"></div>
+          ${infoHtml}
+          ${linkHtml}
+          ${sectionsHtml}
+          <div class="step-actions">
+            <button class="btn-complete-step ${isDone?'done-btn':''}" onclick="markStepComplete(${step.id})">
+              ${isDone ? '✓ ' + t('step.done') : '✓ ' + t('step.mark')}
+            </button>
+            <button class="btn-reset-step" onclick="resetStep(${step.id}, event)">🗘 ${t('step.reset')}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCheckItem(item) {
+  const isChecked = !!checkedItems[item.id];
+  const tagHtml = item.tag ? getTagText(item) : '';
+  return `
+    <div class="checklist-item ${isChecked?'checked':''}" onclick="toggleItem('${item.id}')">
+      <div class="check-box">
+        <span class="check-tick">✓</span>
+      </div>
+      <div class="check-text">${getText(item.text)}${tagHtml}</div>
+    </div>
+  `;
+}
+
+// =========================================================
+// INTERACTIONS
+// =========================================================
+function toggleStep(stepId) {
+  const card = document.getElementById(`step-card-${stepId}`);
+  card.classList.toggle('open');
+}
+
+function scrollToStep(stepId) {
+  const card = document.getElementById(`step-card-${stepId}`);
+  if(card) {
+    card.classList.add('open');
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function toggleItem(itemId) {
+  checkedItems[itemId] = !checkedItems[itemId];
+  if(!checkedItems[itemId]) delete checkedItems[itemId];
+  saveState();
+
+  let stepId = null;
+  for(const step of STEPS_DATA) {
+    for(const sec of step.sections) {
+      if(sec.items.find(i => i.id === itemId)) { stepId = step.id; break; }
+    }
+    if(stepId) break;
+  }
+
+  const itemEl = document.querySelector(`[onclick="toggleItem('${itemId}')"]`);
+  if(itemEl) {
+    const isChecked = !!checkedItems[itemId];
+    itemEl.classList.toggle('checked', isChecked);
+  }
+
+  if(stepId) updateStepCard(stepId);
+  updateProgress();
+}
+
+function updateStepCard(stepId) {
+  const step = STEPS_DATA.find(s => s.id === stepId);
+  if(!step) return;
+  const { total, done } = getStepProgress(step);
+  const isDone = total > 0 && done === total;
+  const card = document.getElementById(`step-card-${stepId}`);
+  if(!card) return;
+
+  card.classList.toggle('completed-card', isDone);
+
+  const miniEl = card.querySelector('.step-progress-mini');
+  if(miniEl) {
+    if(isDone) {
+      miniEl.className = 'step-progress-mini all-done';
+      miniEl.textContent = `✓ ${t('step.allComplete')}`;
+    } else {
+      miniEl.className = 'step-progress-mini';
+      miniEl.textContent = `${done}/${total}`;
+    }
+  }
+
+  const completeBtn = card.querySelector('.btn-complete-step');
+  if(completeBtn) {
+    completeBtn.classList.toggle('done-btn', isDone);
+    completeBtn.textContent = isDone ? `✓ ${t('step.done')}` : `✓ ${t('step.mark')}`;
+  }
+}
+
+function markStepComplete(stepId) {
+  const step = STEPS_DATA.find(s => s.id === stepId);
+  if(!step) return;
+  const allItems = step.sections.flatMap(s => s.items);
+  allItems.forEach(item => { checkedItems[item.id] = true; });
+  saveState();
+
+  const card = document.getElementById(`step-card-${stepId}`);
+  if(card) {
+    card.querySelectorAll('.checklist-item').forEach(el => {
+      el.classList.add('checked');
+    });
+  }
+
+  updateStepCard(stepId);
+  updateProgress();
+
+  showToast(`${t('step.allComplete')} 「${getText(step.title)}」！`);
+
+  const allDone = STEPS_DATA.every(s => {
+    const { total: t2, done: d } = getStepProgress(s);
+    return t2 > 0 && d === t2;
+  });
+  if(allDone) {
+    setTimeout(() => document.getElementById('celebration').classList.add('show'), 800);
+  }
+}
+
+function resetStep(stepId, event) {
+  event.stopPropagation();
+  const step = STEPS_DATA.find(s => s.id === stepId);
+  if(!step) return;
+  const allItems = step.sections.flatMap(s => s.items);
+  allItems.forEach(item => { delete checkedItems[item.id]; });
+  saveState();
+
+  const card = document.getElementById(`step-card-${stepId}`);
+  if(card) {
+    card.querySelectorAll('.checklist-item').forEach(el => el.classList.remove('checked'));
+    card.classList.remove('completed-card');
+  }
+
+  updateStepCard(stepId);
+  updateProgress();
+}
+
+function resetAll() {
+  if(!confirm(t('toast.resetConfirm'))) return;
+  checkedItems = {};
+  saveState();
+  renderAll();
+}
+
+// =========================================================
+// PROGRESS CALCULATION
+// =========================================================
+function getStepProgress(step) {
+  const allItems = step.sections.flatMap(s => s.items);
+  const total = allItems.length;
+  const done = allItems.filter(i => !!checkedItems[i.id]).length;
+  return { total, done };
+}
+
+function updateProgress() {
+  let totalAll = 0, doneAll = 0;
+  STEPS_DATA.forEach(step => {
+    const { total, done } = getStepProgress(step);
+    totalAll += total; doneAll += done;
+  });
+  const pct = totalAll === 0 ? 0 : Math.round(doneAll / totalAll * 100);
+
+  document.getElementById('main-progress-bar').style.width = pct + '%';
+  document.getElementById('pct-display').innerHTML = `${pct}<span>%</span>`;
+  
+  const itemsText = t('stats.items');
+  document.getElementById('overall-stats').innerHTML = `共 <strong>${doneAll}</strong> / <strong>${totalAll}</strong> ${itemsText}`;
+
+  renderStepDots();
+}
+
+// =========================================================
+// TOAST
+// =========================================================
+let toastTimer;
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  const msgEl = document.getElementById('toast-msg');
+  msgEl.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function closeCelebration() {
+  document.getElementById('celebration').classList.remove('show');
+}
+
+// =========================================================
+// INIT
+// =========================================================
+function init() {
+  loadState();
+  switchLang(currentLang);
+
+  // Auto-open the first incomplete step
+  const firstIncomplete = STEPS_DATA.find(step => {
+    const { total, done } = getStepProgress(step);
+    return done < total;
+  });
+  if(firstIncomplete) {
+    const card = document.getElementById(`step-card-${firstIncomplete.id}`);
+    if(card) card.classList.add('open');
+  }
+}
+
+// Run immediately since script is at end of body
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>
