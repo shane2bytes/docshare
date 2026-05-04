@@ -380,6 +380,30 @@
 
         .section:hover { box-shadow: var(--shadow-2); }
 
+        /* 2번 그룹 컨테이너 */
+        .section-group {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: var(--s8);
+            margin-bottom: var(--s5);
+            box-shadow: var(--shadow-1);
+            border: 1px solid var(--border);
+        }
+        .section-group:hover { box-shadow: var(--shadow-2); }
+
+        /* 그룹 내부 섹션 — 테두리/배경 제거, 간격 축소 */
+        .section-group > .section {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 0;
+            margin-bottom: var(--s6);
+            scroll-margin-top: 80px;
+        }
+        .section-group > .section:last-child { margin-bottom: 0; }
+        .section-group > .section:hover { box-shadow: none; }
+
         .section-header {
             display: flex;
             align-items: flex-start;
@@ -769,6 +793,9 @@
 <a class="nav-item" href="#section1">
 <span>⚠️</span> 1. 广告次数问题
             </a>
+<a class="nav-item" href="#section2-intro">
+<span>🛡️</span> 2. 玩家广告压力缓解方案
+            </a>
 <a class="nav-item" href="#section2">
 <span>🎟️</span> 2-1. 免广告券购买优化
             </a>
@@ -786,6 +813,12 @@
             </a>
 <a class="nav-item" href="#section4">
 <span>📱</span> 3. Coupang外链广告
+</a>
+<a class="nav-item" href="#section4-1">
+<span>🔗</span> 3-1. 外链广告形式
+</a>
+<a class="nav-item" href="#section4-2">
+<span>📋</span> 3-2. 外链广告具体方案
 </a><a class="nav-item" href="#section6"><span>📌</span> 4. 开发建议综合汇总</a>
 </div>
 <!-- 侧边栏底部 Logo -->
@@ -838,6 +871,17 @@
 <div class="highlight-box">
 <div class="highlight-box-title"><span>💡</span> 解决方向</div>
 <p>在不改动现有广告系统的前提下，通过辅助装置<strong>适度减少广告观看次数</strong>，降低用户疲劳感，从而改善留存。</p>
+</div>
+</section>
+<!-- 2. 玩家广告压力缓解方案 (그룹 컨테이너 시작) -->
+<div class="section-group">
+<section class="section" id="section2-intro">
+<div class="section-header">
+<div class="section-number">2</div>
+<div>
+<h2 class="section-title">玩家广告压力缓解方案</h2>
+<p class="section-subtitle">通过多项改善措施，降低广告疲劳感并提升用户留存</p>
+</div>
 </div>
 </section>
 <!-- 2-1. 免广告券购买优化 -->
@@ -1259,7 +1303,10 @@
 <div class="highlight-box-title"><span>📝</span> 备注</div>
 <p>本提案以<strong>最小化开发工作量</strong>为原则进行设计。若需调整具体获取数量，欢迎提供意见。</p>
 </div>
-</section><!-- 3. Coupang外链广告 -->
+</section>
+</div><!-- /.section-group -->
+<!-- 3. Coupang外链广告 (그룹 컨테이너 시작) -->
+<div class="section-group">
 <section class="section" id="section4">
 <div class="section-header">
 <div class="section-number">3</div>
@@ -1268,7 +1315,16 @@
 <p class="section-subtitle">在减少广告次数的同时，通过外链广告强化营收</p>
 </div>
 </div>
-<div class="sub-proposal">3-1. 外链广告形式</div>
+</section>
+<!-- 3-1. 外链广告形式 -->
+<section class="section" id="section4-1">
+<div class="section-header">
+<div class="section-number">3-1</div>
+<div>
+<h2 class="section-title">外链广告形式</h2>
+<p class="section-subtitle">外链广告的基本运作方式</p>
+</div>
+</div>
 <div class="card">
 <div class="card-title">📱 外链广告 — 基本形式</div>
 <ul class="list">
@@ -1285,7 +1341,16 @@
 <figcaption>游戏内点击coupang外链广告后跳转到浏览器coupang</figcaption>
 </figure>
 </div>
-<div class="sub-proposal">3-2. 外链广告具体方案</div>
+</section>
+<!-- 3-2. 外链广告具体方案 -->
+<section class="section" id="section4-2">
+<div class="section-header">
+<div class="section-number">3-2</div>
+<div>
+<h2 class="section-title">外链广告具体方案</h2>
+<p class="section-subtitle">在各入口追加外链广告的具体实施方案</p>
+</div>
+</div>
 <div class="block">
 <div class="block-title">📋 3-2-1. 在签到页面中添加</div>
 <ul class="list">
@@ -1301,7 +1366,6 @@
 <figure class="img-card">
 <img src="https://s6z1.com/shane/i/2026/출석_쿠팡-광고-배너_1.png" alt="签到页面外链广告" onerror="this.parentElement.style.display='none'"/>
 <figcaption>7日签到下方增加再获得一次奖励按钮</figcaption>
-
 </figure>
 </div>
 </div>
@@ -1330,7 +1394,7 @@
 </ul>
 </div>
 </section>
-</section>
+</div><!-- /.section-group -->
 <!-- 4. 开发建议综合汇总 -->
 <section class="section" id="section6">
 <div class="section-header">
