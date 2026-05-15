@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>补仓均价计算器</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #111827;
+      --sub: #6b7280;
+      --line: #e5e7eb;
+      --red: #ef4444;
+      --blue: #2563eb;
+      --green: #16a34a;
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 18px;
+      padding-bottom: calc(28px + env(safe-area-inset-bottom));
+    }
+    .wrap { max-width: 520px; margin: 0 auto; }
+    h1 { font-size: 26px; margin: 8px 0 6px; }
+    .desc { color: var(--sub); font-size: 14px; margin-bottom: 18px; line-height: 1.45; }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 8px 28px rgba(17,24,39,.07);
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    label { display: block; font-size: 13px; color: var(--sub); margin-bottom: 6px; }
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 13px 12px;
+      font-size: 18px;
+      outline: none;
+      background: #fff;
+    }
+    input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
+    .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 14px 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .primary { background: var(--red); color: white; }
+    .secondary { background: #eef2ff; color: var(--blue); }
+    .result-main {
+      font-size: 32px;
+      font-weight: 800;
+      margin: 8px 0 4px;
+    }
+    .muted { color: var(--sub); font-size: 13px; }
+    .rows { margin-top: 14px; border-top: 1px solid var(--line); }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 15px;
+    }
+    .row span:first-child { color: var(--sub); }
+    .row span:last-child { font-weight: 700; text-align: right; }
+    .good { color: var(--green); }
+    .bad { color: var(--red); }
+    .hint {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--sub);
+      margin-top: 10px;
+    }
+    .full { grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>补仓均价计算器</h1>
+    <div class="desc">输入当前持仓和计划补仓，自动计算补仓后的平均成本、总股数、总投入，以及是否真的拉低均价。</div>
+
+    <div class="card">
+      <div class="section-title">当前持仓</div>
+      <div class="grid">
+        <div>
+          <label>当前平均成本 / 원</label>
+          <input id="oldPrice" inputmode="decimal" placeholder="例如 48674" value="48674">
+        </div>
+        <div>
+          <label>当前持有数量 / 주</label>
+          <input id="oldQty" inputmode="numeric" placeholder="例如 16" value="16">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">计划补仓</div>
+      <div class="grid">
+        <div>
+          <label>补仓价格 / 원</label>
+          <input id="buyPrice" inputmode="decimal" placeholder="例如 47500">
+        </div>
+        <div>
+          <label>补仓数量 / 주</label>
+          <input id="buyQty" inputmode="numeric" placeholder="例如 16">
+        </div>
+        <div class="full">
+          <label>当前价格 / 원（可选，用来估算补仓后盈亏）</label>
+          <input id="currentPrice" inputmode="decimal" placeholder="例如 49210" value="49210">
+        </div>
+      </div>
+
+      <div class="btns">
+        <button class="primary" onclick="calculate()">计算</button>
+        <button class="secondary" onclick="resetForm()">清空补仓</button>
+      </div>
+    </div>
+
+    <div class="card" id="resultCard" style="display:none;">
+      <div class="section-title">计算结果</div>
+      <div class="muted">补仓后平均成本</div>
+      <div class="result-main" id="newAvg">-</div>
+      <div class="muted" id="avgChange">-</div>
+
+      <div class="rows">
+        <div class="row"><span>补仓金额</span><span id="buyAmount">-</span></div>
+        <div class="row"><span>补仓后总股数</span><span id="totalQty">-</span></div>
+        <div class="row"><span>补仓后总投入</span><span id="totalCost">-</span></div>
+        <div class="row"><span>按当前价估算盈亏</span><span id="pnl">-</span></div>
+      </div>
+
+      <div class="hint" id="hintText"></div>
+    </div>
+  </div>
+
+<script>
+  function num(id) {
+    const v = document.getElementById(id).value.replace(/,/g, '').trim();
+    return v === '' ? NaN : Number(v);
+  }
+
+  function won(n) {
+    if (!isFinite(n)) return '-';
+    return Math.round(n).toLocaleString('ko-KR') + '원';
+  }
+
+  function shares(n) {
+    if (!isFinite(n)) return '-';
+    return n.toLocaleString('ko-KR') + '주';
+  }
+
+  function calculate() {
+    const oldPrice = num('oldPrice');
+    const oldQty = num('oldQty');
+    const buyPrice = num('buyPrice');
+    const buyQty = num('buyQty');
+    const currentPrice = num('currentPrice');
+
+    if ([oldPrice, oldQty, buyPrice, buyQty].some(v => !isFinite(v) || v <= 0)) {
+      alert('请填写当前成本、当前数量、补仓价格、补仓数量。');
+      return;
+    }
+
+    const oldCost = oldPrice * oldQty;
+    const buyCost = buyPrice * buyQty;
+    const totalQuantity = oldQty + buyQty;
+    const totalInvestment = oldCost + buyCost;
+    const newAverage = totalInvestment / totalQuantity;
+    const diff = newAverage - oldPrice;
+    const diffRate = diff / oldPrice * 100;
+
+    document.getElementById('resultCard').style.display = 'block';
+    document.getElementById('newAvg').textContent = won(newAverage);
+    document.getElementById('avgChange').innerHTML =
+      diff < 0
+        ? `<span class="good">均价降低 ${won(Math.abs(diff))}（${Math.abs(diffRate).toFixed(2)}%）</span>`
+        : diff > 0
+          ? `<span class="bad">均价上升 ${won(diff)}（${diffRate.toFixed(2)}%）</span>`
+          : `均价不变`;
+
+    document.getElementById('buyAmount').textContent = won(buyCost);
+    document.getElementById('totalQty').textContent = shares(totalQuantity);
+    document.getElementById('totalCost').textContent = won(totalInvestment);
+
+    if (isFinite(currentPrice) && currentPrice > 0) {
+      const value = currentPrice * totalQuantity;
+      const pnl = value - totalInvestment;
+      const pnlRate = pnl / totalInvestment * 100;
+      document.getElementById('pnl').innerHTML =
+        pnl >= 0
+          ? `<span class="good">+${won(pnl)}（+${pnlRate.toFixed(2)}%）</span>`
+          : `<span class="bad">-${won(Math.abs(pnl))}（${pnlRate.toFixed(2)}%）</span>`;
+    } else {
+      document.getElementById('pnl').textContent = '-';
+    }
+
+    const hint = buyPrice < oldPrice
+      ? '这次补仓价格低于当前成本，所以会拉低平均成本。'
+      : buyPrice > oldPrice
+        ? '这次补仓价格高于当前成本，所以不会拉低均价，反而会抬高平均成本。'
+        : '这次补仓价格等于当前成本，平均成本基本不变。';
+    document.getElementById('hintText').textContent = hint;
+  }
+
+  function resetForm() {
+    document.getElementById('buyPrice').value = '';
+    document.getElementById('buyQty').value = '';
+    document.getElementById('resultCard').style.display = 'none';
+  }
+</script>
+</body>
+</html>
