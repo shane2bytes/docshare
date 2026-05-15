@@ -3,134 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>补仓均价计算器</title>
+  <title>补仓均价计算器 Pro</title>
   <style>
-    :root {
-      --bg: #f6f7fb;
-      --card: #ffffff;
-      --text: #111827;
-      --sub: #6b7280;
-      --line: #e5e7eb;
-      --red: #ef4444;
-      --blue: #2563eb;
-      --green: #16a34a;
-      --radius: 18px;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      padding: 18px;
-      padding-bottom: calc(28px + env(safe-area-inset-bottom));
-    }
-    .wrap { max-width: 520px; margin: 0 auto; }
-    h1 { font-size: 26px; margin: 8px 0 6px; }
-    .desc { color: var(--sub); font-size: 14px; margin-bottom: 18px; line-height: 1.45; }
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: 0 8px 28px rgba(17,24,39,.07);
-      margin-bottom: 14px;
-    }
-    .section-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    label { display: block; font-size: 13px; color: var(--sub); margin-bottom: 6px; }
-    input {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 13px 12px;
-      font-size: 18px;
-      outline: none;
-      background: #fff;
-    }
-    input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
-    .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
-    button {
-      border: 0;
-      border-radius: 14px;
-      padding: 14px 12px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .primary { background: var(--red); color: white; }
-    .secondary { background: #eef2ff; color: var(--blue); }
-    .result-main {
-      font-size: 32px;
-      font-weight: 800;
-      margin: 8px 0 4px;
-    }
-    .muted { color: var(--sub); font-size: 13px; }
-    .rows { margin-top: 14px; border-top: 1px solid var(--line); }
-    .row {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--line);
-      font-size: 15px;
-    }
-    .row span:first-child { color: var(--sub); }
-    .row span:last-child { font-weight: 700; text-align: right; }
-    .good { color: var(--green); }
-    .bad { color: var(--red); }
-    .hint {
-      font-size: 13px;
-      line-height: 1.5;
-      color: var(--sub);
-      margin-top: 10px;
-    }
-    .full { grid-column: 1 / -1; }
+    :root{--bg:#f6f7fb;--card:#fff;--text:#111827;--sub:#6b7280;--line:#e5e7eb;--red:#ef4444;--blue:#2563eb;--green:#16a34a;--orange:#f97316;--radius:18px}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:18px;padding-bottom:calc(28px + env(safe-area-inset-bottom))}.wrap{max-width:560px;margin:0 auto}h1{font-size:26px;margin:8px 0 6px}.desc{color:var(--sub);font-size:14px;margin-bottom:18px;line-height:1.45}.card{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:0 8px 28px rgba(17,24,39,.07);margin-bottom:14px}.section-title{font-size:16px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}.tag{font-size:12px;color:var(--blue);background:#eef2ff;padding:4px 8px;border-radius:999px;font-weight:700;white-space:nowrap}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{display:block;font-size:13px;color:var(--sub);margin-bottom:6px}input{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 12px;font-size:18px;outline:none;background:#fff;color:var(--text)}input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}button{border:0;border-radius:14px;padding:14px 12px;font-size:16px;font-weight:800;cursor:pointer}.primary{background:var(--red);color:#fff}.blue{background:var(--blue);color:#fff}.secondary{background:#eef2ff;color:var(--blue)}.ghost{background:#f3f4f6;color:#374151}.result-main{font-size:32px;font-weight:900;margin:8px 0 4px;letter-spacing:-.5px}.muted{color:var(--sub);font-size:13px;line-height:1.45}.rows{margin-top:14px;border-top:1px solid var(--line)}.row{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}.row span:first-child{color:var(--sub)}.row span:last-child{font-weight:800;text-align:right}.good{color:var(--green)}.bad{color:var(--red)}.hint{font-size:13px;line-height:1.5;color:var(--sub);margin-top:10px}.full{grid-column:1/-1}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}.tab{padding:12px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--sub);font-size:14px;font-weight:800;text-align:center}.tab.active{border-color:var(--blue);background:#eef2ff;color:var(--blue)}.scenario{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px;background:#fff}.scenario-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:8px}.scenario-price{font-size:20px;font-weight:900}.scenario-badge{font-size:12px;padding:4px 8px;border-radius:999px;background:#ecfdf5;color:var(--green);font-weight:800;white-space:nowrap}.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;font-size:14px;color:var(--sub)}.mini-grid b{color:var(--text);display:block;margin-top:2px}.error{display:none;margin-top:12px;color:var(--red);background:#fef2f2;border:1px solid #fecaca;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.45}.note{background:#fffbeb;color:#92400e;border:1px solid #fde68a;border-radius:14px;padding:12px;font-size:13px;line-height:1.5;margin-top:12px}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>补仓均价计算器</h1>
-    <div class="desc">输入当前持仓和计划补仓，自动计算补仓后的平均成本、总股数、总投入，以及是否真的拉低均价。</div>
+<div class="wrap">
+  <h1>补仓均价计算器 Pro</h1>
+  <div class="desc">支持两种计算：① 已知补仓价格和数量，计算新均价；② 反推在不同市场价下，买多少股才能有效降低均价。</div>
 
-    <div class="card">
-      <div class="section-title">当前持仓</div>
-      <div class="grid">
-        <div>
-          <label>当前平均成本 / 원</label>
-          <input id="oldPrice" inputmode="decimal" placeholder="例如 48674" value="48674">
-        </div>
-        <div>
-          <label>当前持有数量 / 주</label>
-          <input id="oldQty" inputmode="numeric" placeholder="例如 16" value="16">
-        </div>
-      </div>
+  <div class="card">
+    <div class="section-title">当前持仓 <span class="tag">必填</span></div>
+    <div class="grid">
+      <div><label>当前平均成本 / 원</label><input id="oldPrice" inputmode="decimal" placeholder="例如 48674" value="48674"></div>
+      <div><label>当前持有数量 / 주</label><input id="oldQty" inputmode="numeric" placeholder="例如 16" value="16"></div>
+      <div class="full"><label>当前价格 / 원（可选，用来估算盈亏）</label><input id="currentPrice" inputmode="decimal" placeholder="例如 49210" value="49210"></div>
     </div>
+  </div>
 
+  <div class="tabs">
+    <div class="tab active" id="tabSimple" onclick="showMode('simple')">直接计算</div>
+    <div class="tab" id="tabReverse" onclick="showMode('reverse')">反推补仓</div>
+  </div>
+
+  <div id="simpleMode">
     <div class="card">
       <div class="section-title">计划补仓</div>
       <div class="grid">
-        <div>
-          <label>补仓价格 / 원</label>
-          <input id="buyPrice" inputmode="decimal" placeholder="例如 47500">
-        </div>
-        <div>
-          <label>补仓数量 / 주</label>
-          <input id="buyQty" inputmode="numeric" placeholder="例如 16">
-        </div>
-        <div class="full">
-          <label>当前价格 / 원（可选，用来估算补仓后盈亏）</label>
-          <input id="currentPrice" inputmode="decimal" placeholder="例如 49210" value="49210">
-        </div>
+        <div><label>补仓价格 / 원</label><input id="buyPrice" inputmode="decimal" placeholder="例如 47500"></div>
+        <div><label>补仓数量 / 주</label><input id="buyQty" inputmode="numeric" placeholder="例如 16"></div>
       </div>
-
-      <div class="btns">
-        <button class="primary" onclick="calculate()">计算</button>
-        <button class="secondary" onclick="resetForm()">清空补仓</button>
-      </div>
+      <div class="btns"><button class="primary" onclick="calculateSimple()">计算</button><button class="secondary" onclick="resetSimple()">清空补仓</button></div>
+      <div class="error" id="simpleError"></div>
     </div>
 
     <div class="card" id="resultCard" style="display:none;">
@@ -138,92 +43,55 @@
       <div class="muted">补仓后平均成本</div>
       <div class="result-main" id="newAvg">-</div>
       <div class="muted" id="avgChange">-</div>
-
       <div class="rows">
         <div class="row"><span>补仓金额</span><span id="buyAmount">-</span></div>
         <div class="row"><span>补仓后总股数</span><span id="totalQty">-</span></div>
         <div class="row"><span>补仓后总投入</span><span id="totalCost">-</span></div>
         <div class="row"><span>按当前价估算盈亏</span><span id="pnl">-</span></div>
       </div>
-
       <div class="hint" id="hintText"></div>
     </div>
   </div>
 
+  <div id="reverseMode" style="display:none;">
+    <div class="card">
+      <div class="section-title">反推条件 <span class="tag">新功能</span></div>
+      <div class="grid">
+        <div><label>希望均价降低 / %</label><input id="targetDropPct" inputmode="decimal" placeholder="例如 1" value="1"></div>
+        <div><label>最大可投入金额 / 원</label><input id="maxBudget" inputmode="numeric" placeholder="例如 1000000" value="1000000"></div>
+        <div><label>最低观察价格 / 원</label><input id="minMarketPrice" inputmode="decimal" placeholder="例如 46000"></div>
+        <div><label>最高观察价格 / 원</label><input id="maxMarketPrice" inputmode="decimal" placeholder="例如 48600"></div>
+        <div><label>价格间隔 / 원</label><input id="priceStep" inputmode="numeric" placeholder="例如 200" value="200"></div>
+        <div><label>每次最少买入 / 주</label><input id="minBuyQty" inputmode="numeric" placeholder="例如 1" value="1"></div>
+      </div>
+      <div class="btns"><button class="blue" onclick="calculateReverse()">生成方案</button><button class="ghost" onclick="fillReverseDefaults()">自动填价格区间</button></div>
+      <div class="error" id="reverseError"></div>
+      <div class="note">逻辑：系统会从“最高观察价”一路算到“最低观察价”，找出在该价格买入多少股，能让新均价低于你的目标均价。金额不超过你设置的预算。</div>
+    </div>
+
+    <div class="card" id="reverseResultCard" style="display:none;">
+      <div class="section-title">可行补仓方案</div>
+      <div class="muted" id="reverseTargetText">-</div>
+      <div id="scenarioList"></div>
+      <div class="hint" id="reverseHint"></div>
+    </div>
+  </div>
+</div>
+
 <script>
-  function num(id) {
-    const v = document.getElementById(id).value.replace(/,/g, '').trim();
-    return v === '' ? NaN : Number(v);
-  }
-
-  function won(n) {
-    if (!isFinite(n)) return '-';
-    return Math.round(n).toLocaleString('ko-KR') + '원';
-  }
-
-  function shares(n) {
-    if (!isFinite(n)) return '-';
-    return n.toLocaleString('ko-KR') + '주';
-  }
-
-  function calculate() {
-    const oldPrice = num('oldPrice');
-    const oldQty = num('oldQty');
-    const buyPrice = num('buyPrice');
-    const buyQty = num('buyQty');
-    const currentPrice = num('currentPrice');
-
-    if ([oldPrice, oldQty, buyPrice, buyQty].some(v => !isFinite(v) || v <= 0)) {
-      alert('请填写当前成本、当前数量、补仓价格、补仓数量。');
-      return;
-    }
-
-    const oldCost = oldPrice * oldQty;
-    const buyCost = buyPrice * buyQty;
-    const totalQuantity = oldQty + buyQty;
-    const totalInvestment = oldCost + buyCost;
-    const newAverage = totalInvestment / totalQuantity;
-    const diff = newAverage - oldPrice;
-    const diffRate = diff / oldPrice * 100;
-
-    document.getElementById('resultCard').style.display = 'block';
-    document.getElementById('newAvg').textContent = won(newAverage);
-    document.getElementById('avgChange').innerHTML =
-      diff < 0
-        ? `<span class="good">均价降低 ${won(Math.abs(diff))}（${Math.abs(diffRate).toFixed(2)}%）</span>`
-        : diff > 0
-          ? `<span class="bad">均价上升 ${won(diff)}（${diffRate.toFixed(2)}%）</span>`
-          : `均价不变`;
-
-    document.getElementById('buyAmount').textContent = won(buyCost);
-    document.getElementById('totalQty').textContent = shares(totalQuantity);
-    document.getElementById('totalCost').textContent = won(totalInvestment);
-
-    if (isFinite(currentPrice) && currentPrice > 0) {
-      const value = currentPrice * totalQuantity;
-      const pnl = value - totalInvestment;
-      const pnlRate = pnl / totalInvestment * 100;
-      document.getElementById('pnl').innerHTML =
-        pnl >= 0
-          ? `<span class="good">+${won(pnl)}（+${pnlRate.toFixed(2)}%）</span>`
-          : `<span class="bad">-${won(Math.abs(pnl))}（${pnlRate.toFixed(2)}%）</span>`;
-    } else {
-      document.getElementById('pnl').textContent = '-';
-    }
-
-    const hint = buyPrice < oldPrice
-      ? '这次补仓价格低于当前成本，所以会拉低平均成本。'
-      : buyPrice > oldPrice
-        ? '这次补仓价格高于当前成本，所以不会拉低均价，反而会抬高平均成本。'
-        : '这次补仓价格等于当前成本，平均成本基本不变。';
-    document.getElementById('hintText').textContent = hint;
-  }
-
-  function resetForm() {
-    document.getElementById('buyPrice').value = '';
-    document.getElementById('buyQty').value = '';
-    document.getElementById('resultCard').style.display = 'none';
-  }
+function num(id){const v=document.getElementById(id).value.replace(/,/g,'').trim();return v===''?NaN:Number(v)}
+function won(n){return isFinite(n)?Math.round(n).toLocaleString('ko-KR')+'원':'-'}
+function shares(n){return isFinite(n)?Math.round(n).toLocaleString('ko-KR')+'주':'-'}
+function pct(n){return isFinite(n)?n.toFixed(2)+'%':'-'}
+function showError(id,msg){const el=document.getElementById(id);el.style.display='block';el.textContent=msg}
+function hideError(id){const el=document.getElementById(id);el.style.display='none';el.textContent=''}
+function showMode(mode){const simple=mode==='simple';document.getElementById('simpleMode').style.display=simple?'block':'none';document.getElementById('reverseMode').style.display=simple?'none':'block';document.getElementById('tabSimple').classList.toggle('active',simple);document.getElementById('tabReverse').classList.toggle('active',!simple)}
+function getBase(){const oldPrice=num('oldPrice'),oldQty=num('oldQty'),currentPrice=num('currentPrice');if(!isFinite(oldPrice)||oldPrice<=0||!isFinite(oldQty)||oldQty<=0){return{error:'请先填写有效的当前平均成本和当前持仓数量。'}}return{oldPrice,oldQty,currentPrice}}
+function calculateNewAvg(oldPrice,oldQty,buyPrice,buyQty){const oldCost=oldPrice*oldQty,buyCost=buyPrice*buyQty,totalQuantity=oldQty+buyQty,totalInvestment=oldCost+buyCost,newAverage=totalInvestment/totalQuantity;return{oldCost,buyCost,totalQuantity,totalInvestment,newAverage}}
+function calculateSimple(){hideError('simpleError');const base=getBase();if(base.error){showError('simpleError',base.error);return}const buyPrice=num('buyPrice'),buyQty=num('buyQty');if(!isFinite(buyPrice)||buyPrice<=0||!isFinite(buyQty)||buyQty<=0){showError('simpleError','请填写有效的补仓价格和补仓数量。');return}const{oldPrice,oldQty,currentPrice}=base;const r=calculateNewAvg(oldPrice,oldQty,buyPrice,buyQty);const diff=r.newAverage-oldPrice,diffRate=diff/oldPrice*100;document.getElementById('resultCard').style.display='block';document.getElementById('newAvg').textContent=won(r.newAverage);document.getElementById('avgChange').innerHTML=diff<0?`<span class="good">均价降低 ${won(Math.abs(diff))}（${pct(Math.abs(diffRate))}）</span>`:diff>0?`<span class="bad">均价上升 ${won(diff)}（${pct(diffRate)}）</span>`:'均价不变';document.getElementById('buyAmount').textContent=won(r.buyCost);document.getElementById('totalQty').textContent=shares(r.totalQuantity);document.getElementById('totalCost').textContent=won(r.totalInvestment);if(isFinite(currentPrice)&&currentPrice>0){const value=currentPrice*r.totalQuantity,pnl=value-r.totalInvestment,pnlRate=pnl/r.totalInvestment*100;document.getElementById('pnl').innerHTML=pnl>=0?`<span class="good">+${won(pnl)}（+${pct(pnlRate)}）</span>`:`<span class="bad">-${won(Math.abs(pnl))}（${pct(pnlRate)}）</span>`}else{document.getElementById('pnl').textContent='-'}document.getElementById('hintText').textContent=buyPrice<oldPrice?'这次补仓价格低于当前成本，所以会拉低平均成本。':buyPrice>oldPrice?'这次补仓价格高于当前成本，所以不会拉低均价，反而会抬高平均成本。':'这次补仓价格等于当前成本，平均成本基本不变。'}
+function resetSimple(){document.getElementById('buyPrice').value='';document.getElementById('buyQty').value='';document.getElementById('resultCard').style.display='none';hideError('simpleError')}
+function fillReverseDefaults(){const base=getBase();if(base.error){showError('reverseError',base.error);return}hideError('reverseError');const oldPrice=base.oldPrice,current=isFinite(base.currentPrice)&&base.currentPrice>0?base.currentPrice:oldPrice,high=Math.min(oldPrice*.995,current*.995),low=oldPrice*.94;document.getElementById('maxMarketPrice').value=Math.round(high);document.getElementById('minMarketPrice').value=Math.round(low);document.getElementById('priceStep').value=Math.max(10,Math.round(oldPrice*.005/10)*10)}
+function calculateReverse(){hideError('reverseError');const base=getBase();if(base.error){showError('reverseError',base.error);return}const{oldPrice,oldQty}=base,targetDropPct=num('targetDropPct'),maxBudget=num('maxBudget'),minMarketPrice=num('minMarketPrice'),maxMarketPrice=num('maxMarketPrice'),priceStep=num('priceStep'),minBuyQty=num('minBuyQty');if(!isFinite(targetDropPct)||targetDropPct<=0){showError('reverseError','请填写希望均价降低的百分比，例如 1。');return}if(!isFinite(maxBudget)||maxBudget<=0){showError('reverseError','请填写最大可投入金额。');return}if(!isFinite(minMarketPrice)||!isFinite(maxMarketPrice)||minMarketPrice<=0||maxMarketPrice<=0){showError('reverseError','请填写有效的最低观察价格和最高观察价格。');return}if(minMarketPrice>maxMarketPrice){showError('reverseError','最低观察价格不能高于最高观察价格。');return}if(maxMarketPrice>=oldPrice){showError('reverseError','反推补仓价需要低于当前均价，否则无法拉低成本。请把最高观察价设置为低于当前均价。');return}if(!isFinite(priceStep)||priceStep<=0){showError('reverseError','请填写有效的价格间隔。');return}if(!isFinite(minBuyQty)||minBuyQty<=0){showError('reverseError','请填写每次最少买入股数。');return}const targetAvg=oldPrice*(1-targetDropPct/100),scenarios=[];let guard=0;for(let p=maxMarketPrice;p>=minMarketPrice&&guard<5000;p-=priceStep){guard++;if(p>=oldPrice)continue;const denominator=targetAvg-p;if(denominator<=0)continue;let requiredQty=Math.ceil((oldQty*(oldPrice-targetAvg))/denominator);requiredQty=Math.max(requiredQty,Math.ceil(minBuyQty));const cost=requiredQty*p;if(cost>maxBudget)continue;const r=calculateNewAvg(oldPrice,oldQty,p,requiredQty);const reduction=oldPrice-r.newAverage,reductionPct=reduction/oldPrice*100;scenarios.push({price:p,qty:requiredQty,cost,newAvg:r.newAverage,reduction,reductionPct,totalQty:r.totalQuantity});if(scenarios.length>=20)break}document.getElementById('reverseResultCard').style.display='block';document.getElementById('reverseTargetText').innerHTML=`目标均价：<b>${won(targetAvg)}</b>，即比当前均价 ${won(oldPrice)} 降低约 <b>${pct(targetDropPct)}</b>。`;const list=document.getElementById('scenarioList');list.innerHTML='';if(scenarios.length===0){list.innerHTML='<div class="note">在你设置的价格区间和预算内，没有找到能达到目标均价的方案。可以尝试：降低目标降幅、提高预算、或把观察价格区间设得更低。</div>';document.getElementById('reverseHint').textContent='';return}scenarios.forEach(s=>{const div=document.createElement('div');div.className='scenario';div.innerHTML=`<div class="scenario-head"><div><div class="muted">如果市场价到</div><div class="scenario-price">${won(s.price)}</div></div><div class="scenario-badge">可达标</div></div><div class="mini-grid"><div>需要买入<b>${shares(s.qty)}</b></div><div>需要投入<b>${won(s.cost)}</b></div><div>补仓后均价<b>${won(s.newAvg)}</b></div><div>均价降低<b class="good">${won(s.reduction)} / ${pct(s.reductionPct)}</b></div><div>补仓后总股数<b>${shares(s.totalQty)}</b></div><div>占预算比例<b>${pct(s.cost/maxBudget*100)}</b></div></div>`;list.appendChild(div)});document.getElementById('reverseHint').textContent='越低的补仓价，通常需要买入的股数越少；越接近当前均价，通常需要买入更多股数才会明显降低均价。'}
 </script>
 </body>
 </html>
