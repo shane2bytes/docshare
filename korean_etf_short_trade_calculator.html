@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>韩国 ETF 短线收益计算器</title>
+  <style>
+    :root{
+      --bg:#f6f7fb; --card:#ffffff; --text:#101828; --muted:#667085; --line:#e4e7ec;
+      --primary:#6f44eb; --primary2:#8b6ff6; --red:#d92d20; --green:#039855; --amber:#dc6803;
+      --shadow:0 12px 32px rgba(16,24,40,.08); --radius:20px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans SC","Noto Sans KR",Arial,sans-serif;background:linear-gradient(180deg,#f2efff 0%,#f6f7fb 260px);color:var(--text)}
+    .wrap{max-width:1180px;margin:0 auto;padding:28px 18px 48px}
+    .hero{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}
+    h1{margin:0 0 8px;font-size:30px;letter-spacing:-.04em}
+    .sub{color:var(--muted);line-height:1.55;font-size:14px;max-width:760px}
+    .badge{background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 13px;color:var(--primary);font-weight:700;white-space:nowrap;box-shadow:var(--shadow);font-size:13px}
+    .grid{display:grid;grid-template-columns:410px 1fr;gap:18px}
+    .card{background:var(--card);border:1px solid rgba(228,231,236,.9);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+    .section-title{font-size:16px;font-weight:800;margin:0 0 14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+    label{display:block;font-size:12px;color:var(--muted);font-weight:700;margin:0 0 6px}
+    input,select{width:100%;border:1px solid var(--line);border-radius:13px;padding:12px 12px;font-size:16px;outline:none;background:#fff;color:var(--text)}
+    input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(111,68,235,.12)}
+    .hint{font-size:12px;color:var(--muted);line-height:1.45;margin-top:6px}
+    .full{grid-column:1/-1}
+    .resultTop{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-bottom:14px}
+    .bigbox{border-radius:18px;padding:18px;background:linear-gradient(135deg,#6f44eb,#8b6ff6);color:#fff;min-height:142px;display:flex;flex-direction:column;justify-content:space-between}
+    .bigbox.loss{background:linear-gradient(135deg,#d92d20,#f97066)}
+    .bigbox.flat{background:linear-gradient(135deg,#667085,#98a2b3)}
+    .biglabel{font-size:13px;opacity:.9;font-weight:700}
+    .bigval{font-size:34px;font-weight:900;letter-spacing:-.04em;margin:8px 0 2px}
+    .bigsub{font-size:13px;opacity:.9;line-height:1.45}
+    .stat{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fcfcfd}
+    .stat + .stat{margin-top:10px}
+    .stat .k{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:7px}
+    .stat .v{font-size:22px;font-weight:900;letter-spacing:-.03em}
+    .green{color:var(--green)} .red{color:var(--red)} .amber{color:var(--amber)}
+    .miniGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+    .mini{border:1px solid var(--line);border-radius:16px;padding:13px;background:#fff}
+    .mini .k{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:8px}.mini .v{font-size:17px;font-weight:850;letter-spacing:-.02em}
+    table{width:100%;border-collapse:collapse;font-size:13px;border-radius:14px;overflow:hidden}
+    th,td{padding:11px 10px;border-bottom:1px solid var(--line);text-align:right} th:first-child,td:first-child{text-align:left} th{background:#f9fafb;color:#475467;font-size:12px} tr:last-child td{border-bottom:none}
+    .pill{display:inline-flex;align-items:center;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800}.pill.good{background:#ecfdf3;color:#027a48}.pill.bad{background:#fef3f2;color:#b42318}.pill.neutral{background:#f2f4f7;color:#344054}
+    .bar{height:11px;background:#f2f4f7;border-radius:999px;overflow:hidden;margin:10px 0}.bar>div{height:100%;width:0%;background:linear-gradient(90deg,var(--primary),var(--primary2));border-radius:999px;transition:.25s}.bar.loss>div{background:linear-gradient(90deg,#f97066,#d92d20)}
+    .note{font-size:12px;color:var(--muted);line-height:1.55;margin-top:12px;background:#f9fafb;border:1px dashed #d0d5dd;border-radius:14px;padding:12px}
+    .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px 11px;font-size:13px;font-weight:800;cursor:pointer}.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}.btn:hover{filter:brightness(.98)}
+    @media(max-width:920px){.grid,.resultTop{grid-template-columns:1fr}.miniGrid{grid-template-columns:repeat(2,1fr)}.hero{display:block}.badge{display:inline-block;margin-top:12px}.wrap{padding:20px 12px 36px}h1{font-size:25px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <h1>韩国 ETF 短线 / 当天买卖收益计算器</h1>
+        <div class="sub">按你的券商手续费 <b>0.136%</b> 预设。ETF 卖出不计算证券交易税，只按买入/卖出手续费计算：现在卖出净赚/净亏多少、需要涨到多少才不亏。</div>
+      </div>
+      <div class="badge">ETF 模式：卖出交易税 0%</div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="section-title">输入交易条件 <span style="font-size:12px;color:var(--muted);font-weight:700">单位：KRW / %</span></div>
+        <div class="row">
+          <div>
+            <label>买入价 / 1股</label>
+            <input id="buyPrice" type="number" min="0" step="1" value="10000">
+          </div>
+          <div>
+            <label>当前价或计划卖出价 / 1股</label>
+            <input id="sellPrice" type="number" min="0" step="1" value="10350">
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>股数</label>
+            <input id="qty" type="number" min="1" step="1" value="10">
+          </div>
+          <div>
+            <label>商品类型</label>
+            <input value="韩国上市 ETF / 交易税 0%" disabled>
+            <div class="hint">只计算买入、卖出手续费。</div>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>券商手续费 / 单边</label>
+            <input id="commission" type="number" min="0" step="0.0001" value="0.136">
+            <div class="hint">买入、卖出各收一次。</div>
+          </div>
+          <div>
+            <label>유관기관수수료 / 单边，可选</label>
+            <input id="agency" type="number" min="0" step="0.000001" value="0">
+            <div class="hint">券商显示另加时，填实际百分比。</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="full">
+            <label>目标净利润，可选</label>
+            <input id="targetProfit" type="number" step="1000" value="0">
+          </div>
+        </div>
+        <div class="btns">
+          <button class="btn primary" id="saveBtn">保存当前默认值</button>
+          <button class="btn" id="resetBtn">恢复默认</button>
+          <button class="btn" id="copyBtn">复制结果</button>
+        </div>
+        <div class="note">
+          这个工具按韩国上市 ETF 短线交易来算，不加入卖出证券交易税。实际成交还会受滑点、分批成交、最低手续费、账户类别，以及 ETF 类型相关税制影响。
+        </div>
+      </div>
+
+      <div>
+        <div class="resultTop">
+          <div id="bigbox" class="bigbox">
+            <div>
+              <div class="biglabel">现在卖出的预估净利润</div>
+              <div id="netProfit" class="bigval">₩0</div>
+              <div id="netSub" class="bigsub">-</div>
+            </div>
+            <div>
+              <div id="decision" class="biglabel">-</div>
+              <div id="progress" class="bar"><div></div></div>
+            </div>
+          </div>
+          <div>
+            <div class="stat">
+              <div class="k">保本卖出价 / 1股</div>
+              <div id="breakEven" class="v">₩0</div>
+            </div>
+            <div class="stat">
+              <div class="k">距离保本还差</div>
+              <div id="gap" class="v">₩0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:18px">
+          <div class="section-title">成本拆解</div>
+          <div class="miniGrid" style="grid-template-columns:repeat(3,1fr)">
+            <div class="mini"><div class="k">买入本金</div><div id="buyAmount" class="v">₩0</div></div>
+            <div class="mini"><div class="k">买入手续费</div><div id="buyFee" class="v red">₩0</div></div>
+            <div class="mini"><div class="k">卖出手续费</div><div id="sellFee" class="v red">₩0</div></div>
+          </div>
+          <table>
+            <tbody>
+              <tr><td>实际总买入成本</td><td id="totalBuy">₩0</td></tr>
+              <tr><td>卖出后实际到账</td><td id="netSell">₩0</td></tr>
+              <tr><td>总费用，买入手续费 + 卖出手续费</td><td id="totalCost">₩0</td></tr>
+              <tr><td>净收益率，按实际买入成本</td><td id="roi">0.00%</td></tr>
+              <tr><td>达到目标净利润所需卖出价</td><td id="targetPrice">-</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="section-title">卖出价快速对照表 <span style="font-size:12px;color:var(--muted);font-weight:700">以买入价为基准</span></div>
+          <table id="ladder">
+            <thead><tr><th>卖出价</th><th>涨跌幅</th><th>净利润</th><th>净收益率</th><th>判断</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const ids=['buyPrice','sellPrice','qty','commission','agency','targetProfit'];
+  const fmtWon=n=> new Intl.NumberFormat('ko-KR',{style:'currency',currency:'KRW',maximumFractionDigits:0}).format(isFinite(n)?Math.round(n):0);
+  const fmtPct=n=> (isFinite(n)?n:0).toFixed(2)+'%';
+  const num=id=> parseFloat($(id).value)||0;
+  function calcAt(sellPrice){
+    const buyPrice=num('buyPrice'), qty=Math.max(0,Math.floor(num('qty')));
+    const commission=num('commission')/100, agency=num('agency')/100, tax=0;
+    const buyAmount=buyPrice*qty, sellAmount=sellPrice*qty;
+    const buyFee=buyAmount*(commission+agency);
+    const sellFee=sellAmount*(commission+agency);
+    const sellTax=sellAmount*tax;
+    const totalBuy=buyAmount+buyFee;
+    const netSell=sellAmount-sellFee-sellTax;
+    const netProfit=netSell-totalBuy;
+    const roi= totalBuy ? netProfit/totalBuy*100 : 0;
+    const breakEven= buyPrice*(1+commission+agency)/(1-commission-agency-tax);
+    const targetProfit=num('targetProfit');
+    const targetPrice= qty ? (buyAmount+buyFee+targetProfit)/(qty*(1-commission-agency-tax)) : 0;
+    return {buyPrice, sellPrice, qty, commission, agency, tax, buyAmount, sellAmount, buyFee, sellFee, sellTax, totalBuy, netSell, netProfit, roi, breakEven, targetPrice, totalCost:buyFee+sellFee+sellTax};
+  }
+  function render(){
+    const r=calcAt(num('sellPrice'));
+    $('buyAmount').textContent=fmtWon(r.buyAmount); $('buyFee').textContent=fmtWon(r.buyFee); $('sellFee').textContent=fmtWon(r.sellFee);
+    $('totalBuy').textContent=fmtWon(r.totalBuy); $('netSell').textContent=fmtWon(r.netSell); $('totalCost').textContent=fmtWon(r.totalCost); $('roi').textContent=fmtPct(r.roi);
+    $('netProfit').textContent=fmtWon(r.netProfit); $('breakEven').textContent=fmtWon(r.breakEven); $('targetPrice').textContent=num('targetProfit')?fmtWon(r.targetPrice):'未设置目标净利润';
+    const gap=r.sellPrice-r.breakEven; $('gap').textContent=(gap>=0?'+':'')+fmtWon(gap); $('gap').className='v '+(gap>=0?'green':'red');
+    $('netProfit').className='bigval '+(r.netProfit>0?'':''); $('roi').className=r.roi>0?'green':r.roi<0?'red':'';
+    const box=$('bigbox'); box.className='bigbox '+(r.netProfit>0?'':r.netProfit<0?'loss':'flat');
+    const costPerShare=(r.breakEven-r.buyPrice);
+    $('netSub').textContent=`每股需要至少涨 ${fmtWon(costPerShare)} 才能覆盖买卖手续费；当前净收益率 ${fmtPct(r.roi)}。`;
+    $('decision').textContent=r.netProfit>0?'已越过保本线，可按利润/行情判断是否卖出':r.netProfit<0?'未越过保本线，现在卖出会亏损':'刚好接近保本';
+    const p=Math.max(0,Math.min(100,(r.sellPrice/r.breakEven)*100)); $('progress').className='bar '+(r.netProfit<0?'loss':''); $('progress').firstElementChild.style.width=p+'%';
+    const changes=[-5,-3,-2,-1,0,1,2,3,5,8,10]; const tb=$('ladder').querySelector('tbody'); tb.innerHTML='';
+    changes.forEach(ch=>{ const sp=r.buyPrice*(1+ch/100); const x=calcAt(sp); const tr=document.createElement('tr');
+      const cls=x.netProfit>0?'good':x.netProfit<0?'bad':'neutral'; const txt=x.netProfit>0?'盈利':x.netProfit<0?'亏损':'保本';
+      tr.innerHTML=`<td>${fmtWon(sp)}</td><td>${ch>0?'+':''}${ch.toFixed(1)}%</td><td class="${x.netProfit>0?'green':x.netProfit<0?'red':''}">${fmtWon(x.netProfit)}</td><td>${fmtPct(x.roi)}</td><td><span class="pill ${cls}">${txt}</span></td>`; tb.appendChild(tr);
+    });
+    localStorage.setItem('krStockCalc_last', JSON.stringify(Object.fromEntries(ids.map(id=>[id,$(id).value]))));
+  }
+  ids.forEach(id=>$(id).addEventListener('input',render));
+  $('saveBtn').onclick=()=>{localStorage.setItem('krStockCalc_default', JSON.stringify(Object.fromEntries(ids.map(id=>[id,$(id).value])))); alert('已保存为默认值');};
+  $('resetBtn').onclick=()=>{localStorage.removeItem('krStockCalc_default'); location.reload();};
+  $('copyBtn').onclick=()=>{const r=calcAt(num('sellPrice')); navigator.clipboard.writeText(`韩国 ETF 短线计算\n买入价：${fmtWon(r.buyPrice)} / 卖出价：${fmtWon(r.sellPrice)} / 股数：${r.qty}\n净利润：${fmtWon(r.netProfit)} / 净收益率：${fmtPct(r.roi)}\n保本价：${fmtWon(r.breakEven)}\n总费用：${fmtWon(r.totalCost)}`); alert('结果已复制');};
+  try{const saved=JSON.parse(localStorage.getItem('krStockCalc_default')||localStorage.getItem('krStockCalc_last')||'{}'); Object.entries(saved).forEach(([k,v])=>{if($(k))$(k).value=v});}catch(e){}
+  render();
+})();
+</script>
+</body>
+</html>
