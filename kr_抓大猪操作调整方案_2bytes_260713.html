@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>돼지대탈출 - 抓大猪迷你游戏摇晃操作变更提案</title>
+    <!-- 阿里巴巴普惠体 3.0 -->
+    <link href="https://puhuiti.oss-cn-hangzhou.aliyuncs.com/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.css" rel="stylesheet">
+    <link href="https://puhuiti.oss-cn-hangzhou.aliyuncs.com/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-65-Medium/AlibabaPuHuiTi-3-65-Medium.css" rel="stylesheet">
+    <link href="https://puhuiti.oss-cn-hangzhou.aliyuncs.com/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-75-SemiBold/AlibabaPuHuiTi-3-75-SemiBold.css" rel="stylesheet">
+    <link href="https://puhuiti.oss-cn-hangzhou.aliyuncs.com/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-85-Bold/AlibabaPuHuiTi-3-85-Bold.css" rel="stylesheet">
+    <style>
+        /* ============================================
+           Kakao Design System Tokens
+           ============================================ */
+        :root {
+            --kakao-yellow: #FEE500;
+            --kakao-brown: #3C1E1E;
+            --kakao-black: #191919;
+
+            --color-error: #F25555;
+            --color-success: #47B881;
+            --color-info: #4A90D9;
+            --color-warning: #F5A623;
+
+            --gray-900: #191919;
+            --gray-800: #333333;
+            --gray-700: #4D4D4D;
+            --gray-600: #666666;
+            --gray-500: #999999;
+            --gray-400: #B3B3B3;
+            --gray-300: #CCCCCC;
+            --gray-200: #E0E0E0;
+            --gray-100: #F0F0F0;
+            --gray-50:  #F9F9F9;
+            --white:    #FFFFFF;
+
+            --surface:  #FFFFFF;
+            --bg:       #F6F6F6;
+
+            --shadow-1: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.10);
+            --shadow-3: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+            --motion-fast:   150ms;
+            --motion-normal: 200ms;
+            --motion-slow:   300ms;
+
+            --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px;
+            --s5: 20px; --s6: 24px; --s8: 32px; --s10: 40px; --s12: 48px;
+
+            --primary:      var(--kakao-black);
+            --primary-light: var(--gray-700);
+            --text:         var(--gray-900);
+            --text-light:   var(--gray-600);
+            --border:       var(--gray-200);
+            --accent:       var(--kakao-yellow);
+        }
+
+        body.dark {
+            --surface:  #1E1E1E;
+            --bg:       #121212;
+            --white:    #2C2C2C;
+            --text:     #E0E0E0;
+            --text-light: #999999;
+            --border:   #3A3A3A;
+            --gray-50:  #1A1A1A;
+            --gray-100: #2C2C2C;
+            --gray-200: #3A3A3A;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Alibaba PuHuiTi 3', 'AlibabaPuHuiTi', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: var(--s6);
+            background: var(--kakao-yellow);
+            color: var(--kakao-black);
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            font-size: 17px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: var(--s2);
+            color: var(--kakao-black);
+        }
+
+        .sidebar-logo img {
+            width: 28px; height: 28px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        .sidebar-subtitle {
+            font-size: 12px;
+            margin-top: var(--s1);
+            color: var(--kakao-brown);
+            font-weight: 400;
+        }
+
+        .nav-section {
+            padding: var(--s4) 0 var(--s2);
+        }
+
+        .nav-section-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: var(--s1) var(--s5) var(--s2);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--s3);
+            padding: 10px var(--s5);
+            color: var(--text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            transition: background var(--motion-fast) ease-in-out,
+                        color var(--motion-fast) ease-in-out;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--gray-100);
+            color: var(--text);
+        }
+
+        .nav-item.active {
+            background: var(--gray-50);
+            color: var(--text);
+            border-left-color: var(--kakao-yellow);
+            font-weight: 600;
+        }
+
+        body.dark .nav-section-label { color: #AAAAAA; }
+        body.dark .nav-item { color: #E0E0E0; }
+        body.dark .nav-item:hover { background: var(--gray-100); color: #FFFFFF; }
+        body.dark .nav-item.active { background: var(--gray-100); color: #FFFFFF; border-left-color: var(--kakao-yellow); }
+
+        .sidebar-footer {
+            padding: var(--s4) var(--s5) var(--s5);
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+            text-align: center;
+        }
+
+        .sidebar-footer img {
+            max-width: 140px;
+            height: auto;
+            display: inline-block;
+        }
+
+        body.dark .sidebar-footer-logo-light { display: none; }
+        body:not(.dark) .sidebar-footer-logo-dark { display: none; }
+
+        .main { margin-left: 260px; min-height: 100vh; }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 14px var(--s8);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 50;
+            box-shadow: var(--shadow-1);
+        }
+
+        .topbar-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: var(--s2);
+        }
+
+        .topbar-actions { display: flex; gap: var(--s2); }
+
+        .btn {
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--gray-100);
+            color: var(--gray-900);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background var(--motion-fast) ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: var(--s1);
+            font-family: inherit;
+        }
+
+        .btn:hover { background: var(--gray-200); }
+        body.dark .btn { background: var(--gray-100); border-color: var(--border); color: var(--text); }
+        body.dark .btn:hover { background: var(--gray-200); }
+
+        .content { padding: var(--s8); max-width: 1000px; margin: 0 auto; }
+
+        .cover {
+            text-align: center;
+            padding: 56px var(--s8);
+            background: var(--kakao-yellow);
+            border-radius: 12px;
+            margin-bottom: var(--s6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cover::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .cover::after {
+            content: '';
+            position: absolute;
+            bottom: -60px; left: -30px;
+            width: 240px; height: 240px;
+            border-radius: 50%;
+            background: rgba(60, 30, 30, 0.06);
+        }
+
+        .cover-icon {
+            margin-bottom: var(--s3);
+            position: relative; z-index: 1;
+        }
+
+        .cover-icon img {
+            width: 72px; height: 72px;
+            border-radius: 16px;
+            object-fit: cover;
+            box-shadow: var(--shadow-3);
+        }
+
+        .cover-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--kakao-black);
+            margin-bottom: var(--s1);
+            position: relative; z-index: 1;
+        }
+
+        .cover-subtitle {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--kakao-brown);
+            margin-bottom: var(--s5);
+            position: relative; z-index: 1;
+        }
+
+        .cover-meta {
+            display: flex;
+            justify-content: center;
+            gap: var(--s5);
+            font-size: 13px;
+            color: var(--kakao-brown);
+            flex-wrap: wrap;
+            position: relative; z-index: 1;
+        }
+
+        .cover-meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--s2);
+            background: rgba(255, 255, 255, 0.55);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .section {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: var(--s8);
+            margin-bottom: var(--s5);
+            box-shadow: var(--shadow-1);
+            border: 1px solid var(--border);
+            scroll-margin-top: 80px;
+        }
+
+        .section:hover { box-shadow: var(--shadow-2); }
+
+        .section-header {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--s4);
+            margin-bottom: var(--s6);
+            padding-bottom: var(--s5);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-number {
+            width: 44px; height: 44px;
+            background: var(--kakao-yellow);
+            color: var(--kakao-black);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .section-subtitle { font-size: 13px; color: var(--text-light); }
+
+        .issue-card {
+            background: #FFF4F4;
+            border: 1px solid #FECACA;
+            border-radius: 10px;
+            padding: 18px var(--s6);
+            margin-bottom: var(--s5);
+        }
+
+        body.dark .issue-card {
+            background: #2D1B1B;
+            border-color: #7F1D1D;
+        }
+
+        .issue-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--color-error);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: var(--s2);
+        }
+
+        .issue-list { list-style: none; }
+
+        .issue-list li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .issue-list li::before {
+            content: '⚠️';
+            position: absolute;
+            left: 0; top: 6px;
+            font-size: 11px;
+        }
+
+        .card {
+            background: var(--gray-50);
+            border-radius: 10px;
+            padding: 20px var(--s6);
+            margin-bottom: 16px;
+            border: 1px solid var(--gray-200);
+        }
+
+        body.dark .card {
+            background: var(--gray-100);
+            border-color: var(--border);
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: var(--s2);
+        }
+
+        body.dark .card-title { color: var(--text); }
+
+        /* 玩家数据卡片 */
+        .data-card {
+            background: var(--gray-50);
+            border-radius: 10px;
+            padding: 20px var(--s6);
+            margin-bottom: 16px;
+            border: 1px solid var(--gray-200);
+        }
+        body.dark .data-card {
+            background: var(--gray-100);
+            border-color: var(--border);
+        }
+        .data-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: var(--s2);
+        }
+        body.dark .data-card-title { color: var(--text); }
+
+        .data-stats-row {
+            display: flex;
+            gap: var(--s4);
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .data-stat {
+            flex: 1;
+            min-width: 120px;
+            background: var(--white);
+            border-radius: 8px;
+            padding: 12px 14px;
+            border: 1px solid var(--gray-200);
+            text-align: center;
+        }
+        body.dark .data-stat {
+            background: var(--surface);
+            border-color: var(--border);
+        }
+        .data-stat-value {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--kakao-black);
+            line-height: 1.2;
+        }
+        body.dark .data-stat-value { color: #FEE500; }
+        .data-stat-unit {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+        .data-stat-label {
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .data-chart-wrapper {
+            margin-top: 4px;
+            overflow-x: auto;
+        }
+        .data-chart-bar-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 120px;
+            padding: 0 2px;
+        }
+        .data-bar {
+            flex: 1;
+            min-width: 14px;
+            max-width: 26px;
+            background: var(--gray-300);
+            border-radius: 3px 3px 0 0;
+            position: relative;
+            transition: background var(--motion-fast) ease;
+            cursor: default;
+        }
+        .data-bar:hover { background: var(--kakao-yellow); }
+        .data-bar.highlight {
+            background: var(--kakao-yellow);
+        }
+        .data-bar-label {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: var(--gray-500);
+            white-space: nowrap;
+        }
+        body.dark .data-bar { background: var(--gray-700); }
+        body.dark .data-bar:hover { background: var(--kakao-yellow); }
+        body.dark .data-bar.highlight { background: var(--kakao-yellow); }
+
+        .data-chart-x-axis {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            padding: 0 2px;
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+        .data-chart-legend {
+            display: flex;
+            gap: var(--s4);
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+        .data-chart-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .legend-dot {
+            width: 8px; height: 8px;
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        .data-popularity-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #FEE500;
+            color: #191919;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 6px;
+        }
+
+        .highlight-box {
+            background: var(--kakao-yellow);
+            color: var(--kakao-black);
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin: 16px 0;
+        }
+
+        .highlight-box-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: var(--s2);
+            color: var(--kakao-black);
+        }
+
+        .highlight-box p { font-size: 14px; color: var(--kakao-brown); line-height: 1.65; }
+        .highlight-box p strong { color: var(--kakao-black); }
+
+        .list { list-style: none; }
+
+        .list li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.65;
+        }
+
+        .list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--gray-600);
+            font-weight: 700;
+        }
+
+        .note-list { list-style: none; }
+
+        .note-list li {
+            padding: 5px 0;
+            padding-left: 22px;
+            position: relative;
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.65;
+        }
+
+        .note-list li::before {
+            content: '※';
+            position: absolute;
+            left: 0;
+            color: var(--gray-500);
+            font-size: 13px;
+        }
+
+        .table-wrapper { overflow-x: auto; margin: 12px 0; border-radius: 10px; border: 1px solid var(--border); }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        th, td {
+            padding: 11px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        th {
+            background: var(--gray-50);
+            font-weight: 700;
+            color: var(--gray-800);
+            font-size: 13px;
+        }
+
+        body.dark th { background: var(--gray-100); color: var(--text); }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--gray-50); }
+        body.dark tr:hover td { background: var(--gray-100); }
+
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--s4);
+            margin: 16px 0;
+        }
+
+        .img-card {
+            background: var(--surface);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-1);
+            border: 1px solid var(--border);
+        }
+
+        .img-card img { width: 100%; height: auto; display: block; }
+
+        .img-card figcaption {
+            padding: 9px 12px;
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            background: var(--gray-50);
+        }
+
+        body.dark .img-card figcaption { background: var(--gray-100); }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--s4);
+            margin: 16px 0;
+        }
+
+        .compare-item {
+            border-radius: 10px;
+            padding: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .compare-item.before {
+            background: #FFF4F4;
+            border-color: #FECACA;
+        }
+
+        .compare-item.after {
+            background: #F0FDF4;
+            border-color: #86EFAC;
+        }
+
+        body.dark .compare-item.before { background: #2D1B1B; border-color: #7F1D1D; }
+        body.dark .compare-item.after  { background: #14261D; border-color: #166534; }
+
+        .compare-label {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .compare-label.before-label { color: var(--color-error); }
+        .compare-label.after-label  { color: var(--color-success); }
+
+        .steps { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+
+        .step { display: flex; gap: 14px; align-items: flex-start; }
+
+        .step-num {
+            width: 28px; height: 28px;
+            background: var(--kakao-yellow);
+            color: var(--kakao-black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .step-text { font-size: 14px; line-height: 1.65; }
+        .step-text strong { color: var(--kakao-black); font-weight: 700; }
+        body.dark .step-text strong { color: var(--kakao-yellow); }
+
+        .sub-proposal {
+            background: var(--gray-100);
+            border-left: 4px solid var(--kakao-yellow);
+            border-radius: 0 8px 8px 0;
+            padding: 12px 18px;
+            margin: 16px 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        body.dark .sub-proposal {
+            background: var(--gray-100);
+            color: var(--text);
+        }
+
+        .definition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: var(--s4);
+            margin: 16px 0;
+        }
+
+        .definition-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            padding: 18px;
+        }
+
+        body.dark .definition-card {
+            background: var(--gray-100);
+            border-color: var(--border);
+        }
+
+        .definition-card .label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .definition-card .title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .definition-card p {
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .tutorial-block {
+            background: var(--kakao-yellow);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            color: var(--kakao-black);
+        }
+
+        .tutorial-block .label {
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--kakao-brown);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tutorial-block .text {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--kakao-black);
+            line-height: 1.5;
+        }
+
+        .footer {
+            text-align: center;
+            padding: var(--s6);
+            color: var(--text-light);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+            margin-top: var(--s6);
+        }
+
+        .footer-logo {
+            margin-bottom: var(--s3);
+        }
+
+        .footer-logo img {
+            max-width: 120px;
+            height: auto;
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); transition: transform var(--motion-normal) ease-in-out; }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; }
+            .content { padding: var(--s4); }
+            .topbar { padding: 12px var(--s4); }
+            .compare-grid { grid-template-columns: 1fr; }
+            .definition-grid { grid-template-columns: 1fr; }
+        }
+
+        @media print {
+            .sidebar, .topbar { display: none; }
+            .main { margin-left: 0; }
+            .section { box-shadow: none; break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+<!-- 侧边导航 -->
+<nav class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <img alt="돼지대탈출 Logo" src="https://s6z1.com/shane/i/2026/06/05/4ci3.jpg">
+            돼지대탈출
+        </div>
+        <div class="sidebar-subtitle">抓大猪迷你游戏操作变更提案</div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-section-label">文档目录</div>
+        <a class="nav-item active" href="#cover">
+            <span>📋</span> 封面
+        </a>
+        <a class="nav-item" href="#section1">
+            <span>🔍</span> 1. 背景及问题
+        </a>
+        <a class="nav-item" href="#section2">
+            <span>💡</span> 2. 改善方向
+        </a>
+        <a class="nav-item" href="#section3">
+            <span>⚖️</span> 3. 操作变更对比
+        </a>
+        <a class="nav-item" href="#section4">
+            <span>🖼️</span> 4. 参考图片
+        </a>
+        <a class="nav-item" href="#section5">
+            <span>⚙️</span> 5. 详细动作定义
+        </a>
+    </div>
+    <!-- 侧边栏底部 Logo -->
+    <div class="sidebar-footer">
+        <img alt="2b&amp;kp Logo - Light" class="sidebar-footer-logo-light" src="https://s6z1.com/shane/i/2026/2b-kp-logo_light_2.png">
+        <img alt="2b&amp;kp Logo - Dark" class="sidebar-footer-logo-dark" src="https://s6z1.com/shane/i/2026/2b-kp-logo_dark_2_1.png">
+    </div>
+</nav>
+<!-- 主内容 -->
+<main class="main">
+    <div class="topbar">
+        <div class="topbar-title">
+            📄 돼지대탈출 - 抓大猪迷你游戏摇晃操作变更提案
+        </div>
+        <div class="topbar-actions">
+            <button class="btn" onclick="toggleDark()">🌓 深色模式</button>
+        </div>
+    </div>
+    <div class="content">
+        <!-- 封面 -->
+        <section class="cover" id="cover">
+            <div class="cover-icon">
+                <img alt="游戏图标" src="https://s6z1.com/shane/i/2026/06/05/4ci3.jpg" style="max-width:80px; border-radius:16px;">
+            </div>
+            <h1 class="cover-title">돼지대탈출</h1>
+            <p class="cover-subtitle">抓大猪迷你游戏摇晃操作变更提案</p>
+            <div class="cover-meta">
+                <div class="cover-meta-item"><span>📅</span> 2026年7月9日</div>
+                <div class="cover-meta-item"><span>🎮</span> 抓大猪迷你游戏</div>
+                <div class="cover-meta-item"><span>💼</span> 2bytes&KakaoPay</div>
+            </div>
+        </section>
+
+        <!-- 1. 背景及问题 -->
+        <section class="section" id="section1">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <div>
+                    <h2 class="section-title">背景及问题</h2>
+                    <p class="section-subtitle">抓大猪迷你游戏现有操作方式及其引发的冲突问题</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">🎮 游戏玩法说明</div>
+                <p style="font-size:14px; line-height:1.65;">「抓大猪」是将锅内同种类食材<strong>3个凑齐后消除</strong>的迷你游戏。玩家通过<strong>实际摇晃手机</strong>来搅动锅内食材，改变食材位置，从而完成消除目标。</p>
+            </div>
+            <!-- 玩家数据卡片 -->
+            <div class="data-card">
+                <div class="data-card-title">📊 抓大猪模式 — 近30天玩家数据 <span class="data-popularity-tag">🔥 人气玩法</span></div>
+                <p style="font-size:13px; color:var(--text-light); margin-bottom:12px; line-height:1.6;">
+                    统计期间 <strong>2026.06.10 ~ 2026.07.09</strong>，抓大猪模式的活跃玩家数量<strong>远超预期</strong>，是游戏中的人气玩法之一。
+                </p>
+                <div class="data-stats-row">
+                    <div class="data-stat">
+                        <div class="data-stat-value">2,175</div>
+                        <div class="data-stat-unit">人/日</div>
+                        <div class="data-stat-label">日均活跃用户</div>
+                    </div>
+                    <div class="data-stat">
+                        <div class="data-stat-value">8,921</div>
+                        <div class="data-stat-unit">次/日</div>
+                        <div class="data-stat-label">日均事件次数</div>
+                    </div>
+                    <div class="data-stat">
+                        <div class="data-stat-value">2,446</div>
+                        <div class="data-stat-unit">人</div>
+                        <div class="data-stat-label">峰值（6月28日）</div>
+                    </div>
+                    <div class="data-stat">
+                        <div class="data-stat-value">30</div>
+                        <div class="data-stat-unit">天</div>
+                        <div class="data-stat-label">统计天数</div>
+                    </div>
+                </div>
+                <div class="data-chart-wrapper">
+                    <div class="data-chart-bar-row" id="userBarChart">
+                        <!-- JS will populate bars -->
+                    </div>
+                    <div class="data-chart-x-axis">
+                        <span>6/10</span>
+                        <span>6/17</span>
+                        <span>6/24</span>
+                        <span>7/01</span>
+                        <span>7/08</span>
+                        <span>7/09</span>
+                    </div>
+                    <div class="data-chart-legend">
+                        <div class="data-chart-legend-item"><span class="legend-dot" style="background:var(--gray-300);"></span> 日活跃用户</div>
+                        <div class="data-chart-legend-item"><span class="legend-dot" style="background:#FEE500;"></span> 峰值日</div>
+                    </div>
+                </div>
+            </div>
+            <div class="issue-card">
+                <div class="issue-card-title">⚠️ 当前问题</div>
+                <ul class="issue-list">
+                    <li>KakaoPay 应用本身具备<strong>「摇晃支付」</strong>功能</li>
+                    <li>玩家在抓大猪游戏中摇晃手机时，KakaoPay 的摇晃支付也会被同时触发</li>
+                    <li>导致游戏被<strong>强制退出</strong>，且重新进入后扣除游戏次数</li>
+                </ul>
+            </div>
+            <div class="highlight-box">
+                <div class="highlight-box-title"><span>💡</span> 解决方案方向</div>
+                <p>需要<strong>移除设备摇晃操作</strong>，将原有的「搅动食材」功能替换为游戏内的<strong>屏幕滑动手势</strong>，从根本上避免与 KakaoPay 摇晃支付功能的冲突。</p>
+            </div>
+        </section>
+
+        <!-- 2. 改善方向 -->
+        <section class="section" id="section2">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <div>
+                    <h2 class="section-title">改善方向</h2>
+                    <p class="section-subtitle">以屏幕滑动替代摇晃，保留核心游戏体验</p>
+                </div>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-text"><strong>完全移除实际摇晃设备</strong>的动作 → 阻断与 KakaoPay「摇晃支付」功能的冲突</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-text">在<strong>锅和食材槽以外的屏幕区域</strong>，用手指滑动即可触发食材搅动效果</div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-text">为与「锅上方拖拽（食材轮廓确认功能）」区分，模式首次进入时在<strong>锅下方显示引导 UI 和说明文案</strong></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 操作变更对比 -->
+        <section class="section" id="section3">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <div>
+                    <h2 class="section-title">摇晃操作变更前 / 后对比</h2>
+                    <p class="section-subtitle">核心操作方式与交互结果的直观对比</p>
+                </div>
+            </div>
+            <div class="compare-grid">
+                <div class="compare-item before">
+                    <div class="compare-label before-label">❌ 变更前（AS-IS）</div>
+                    <ul class="list">
+                        <li>通过<strong>实际摇晃手机</strong>搅动食材</li>
+                        <li>与 KakaoPay 摇晃支付功能冲突</li>
+                        <li>存在游戏强制退出、次数被扣的风险</li>
+                    </ul>
+                </div>
+                <div class="compare-item after">
+                    <div class="compare-label after-label">✅ 变更后（TO-BE）</div>
+                    <ul class="list">
+                        <li>通过<strong>屏幕滑动手势</strong>搅动食材</li>
+                        <li>完全避免与 KakaoPay 功能冲突</li>
+                        <li>交互更可控，体验更稳定</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="images-grid">
+                <figure class="img-card">
+                    <img alt="变更前 - 摇晃操作" src="" onerror="this.parentElement.style.display='none'">
+                    <figcaption>（图片待上传）变更前 - 通过摇晃手机操作</figcaption>
+                </figure>
+                <figure class="img-card">
+                    <img alt="变更后 - 滑动操作" src="" onerror="this.parentElement.style.display='none'">
+                    <figcaption>（图片待上传）变更后 - 通过屏幕滑动操作</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <!-- 4. 参考图片 -->
+        <section class="section" id="section4">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <div>
+                    <h2 class="section-title">参考图片</h2>
+                    <p class="section-subtitle">滑动前 / 后示例</p>
+                </div>
+            </div>
+            <div class="images-grid">
+                <figure class="img-card">
+                    <img alt="首次进入操作教程" src="https://s6z1.com/shane/i/2026/07/13/튜토리얼.png">
+                    <figcaption>首次进入抓大猪模式时操作方式教程</figcaption>
+                </figure>
+                <figure class="img-card">
+                    <img alt="滑动操作" src="https://s6z1.com/shane/i/2026/07/13/섞기_1.png">
+                    <figcaption>滑动操作时（调整食材位置）</figcaption>
+                </figure>
+            </div>
+            <div class="highlight-box">
+                <div class="highlight-box-title"><span>※</span> 核心要点</div>
+                <p>滑动操作后，<strong>底部被遮挡的食材会向上露出</strong>。需以屏幕操作复现与原有摇晃操作<strong>完全相同的结果</strong>，确保游戏逻辑与体验不变。</p>
+            </div>
+        </section>
+
+        <!-- 5. 详细动作定义 -->
+        <section class="section" id="section5">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <div>
+                    <h2 class="section-title">详细动作定义</h2>
+                    <p class="section-subtitle">触发、表现与结果逻辑的完整说明</p>
+                </div>
+            </div>
+            <div class="definition-grid">
+                <div class="definition-card">
+                    <div class="label">Action Trigger</div>
+                    <div class="title">操作触发</div>
+                    <p>在<strong>屏幕（锅和食材槽除外）</strong>上检测手指滑动手势，识别为「搅动食材」指令。</p>
+                </div>
+                <div class="definition-card">
+                    <div class="label">Visual Effect</div>
+                    <div class="title">表现效果</div>
+                    <p>根据<strong>滑动方向与力度</strong>，锅内的食材产生相应移动动画，模拟真实摇晃效果。</p>
+                </div>
+                <div class="definition-card">
+                    <div class="label">Result Logic</div>
+                    <div class="title">结果逻辑</div>
+                    <p>直接复用原有摇晃功能的「食材排列重构」逻辑，<strong>仅替换触发方式</strong>，食材重排算法本身不做变更。</p>
+                </div>
+            </div>
+
+            <div class="sub-proposal">综合对比表</div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:20%">区分</th>
+                            <th style="width:40%">变更前（AS-IS）</th>
+                            <th style="width:40%">变更后（TO-BE）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>操作方式</strong></td>
+                            <td>实际摇晃手机</td>
+                            <td>在锅和食材槽以外的屏幕区域，用手指滑动</td>
+                        </tr>
+                        <tr>
+                            <td><strong>食材搅动表现</strong></td>
+                            <td>根据设备晃动幅度重新排列锅内食材</td>
+                            <td>根据滑动方向与速度重新排列锅内食材</td>
+                        </tr>
+                        <tr>
+                            <td><strong>首次进入引导</strong></td>
+                            <td>摇晃操作引导</td>
+                            <td>滑动操作引导（锅下方显示引导 UI 与说明文案）</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tutorial-block">
+                <div class="label">Tutorial Guide</div>
+                <div class="text">「左右滑动屏幕，晃动锅来搅动食材吧！」</div>
+            </div>
+            <p style="font-size:13px; color:var(--text-light); margin-top:8px;">* 上述文案为抓大猪模式首次进入时显示的教程说明文案，可根据实际需求调整。</p>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="footer-logo">
+                <img alt="2b&amp;kp Logo - Light" class="sidebar-footer-logo-light" src="https://s6z1.com/shane/i/2026/2b-kp-logo_light_2.png">
+                <img alt="2b&amp;kp Logo - Dark" class="sidebar-footer-logo-dark" src="https://s6z1.com/shane/i/2026/2b-kp-logo_dark_2_1.png">
+            </div>
+            <p>돼지대탈출 - 抓大猪迷你游戏摇晃操作变更提案</p>
+        </footer>
+    </div>
+</main>
+<script>
+    function toggleDark() {
+        document.body.classList.toggle('dark');
+    }
+
+    const sections = document.querySelectorAll('section[id]');
+    const navItems = document.querySelectorAll('.nav-item');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            if (scrollY >= section.offsetTop - 200) {
+                current = section.getAttribute('id');
+            }
+        });
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('href') === '#' + current) {
+                item.classList.add('active');
+            }
+        });
+    });
+
+    // 玩家数据柱状图渲染
+    const userData = [
+        1172,2194,2114,2192,2147,2103,2147,2177,2198,2174,
+        2266,2300,2246,2238,2215,2306,2240,2298,2446,2284,
+        2215,2204,2140,2055,2046,2187,2056,2037,2065,1258
+    ];
+    const maxUser = Math.max(...userData);
+    const peakIdx = userData.indexOf(maxUser); // 18 = 6/28
+    const chartContainer = document.getElementById('userBarChart');
+    if (chartContainer) {
+        userData.forEach((val, i) => {
+            const bar = document.createElement('div');
+            bar.className = 'data-bar' + (i === peakIdx ? ' highlight' : '');
+            const pct = Math.max(5, (val / maxUser) * 100);
+            bar.style.height = pct + '%';
+            bar.title = (i < 9 ? '6/' + (10+i) : (i < 20 ? '6/' + (10+i) : '7/' + (i-20+1))) + ' — ' + val + '人';
+            // Fix date display: June has 30 days
+            if (i < 20) {
+                bar.title = '6/' + (10+i) + ' — ' + val + '人';
+            } else {
+                bar.title = '7/' + (i-19) + ' — ' + val + '人';
+            }
+            chartContainer.appendChild(bar);
+        });
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+</script>
+</body></html>
